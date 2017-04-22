@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 # ===================================================
 # For the following sections:
@@ -124,6 +125,7 @@ def linreg_no_bias(X, y, reg = 0.0):
 
 		Return the optimal weight and bias separately.
 	'''
+	t_start = time.time()
 	# Find the numerical solution in part d
 	# YOUR CODE GOES BELOW
 	m = X.shape[0]
@@ -132,10 +134,14 @@ def linreg_no_bias(X, y, reg = 0.0):
 	W_opt = np.linalg.solve(Aggregate @ X + reg * np.eye(Aggregate.shape[0]), \
 		Aggregate @ y)
 	b_opt = sum((y - X @ W_opt)) / m
+	# Benchmark report
+	t_end = time.time()
+	print('--Time elapsed for training: {t:4.2f} \
+		seconds'.format(t = t_end - t_start))
 	return b_opt, W_opt
 
 def grad_descent(X_train, y_train, X_val, y_val, reg = 0.0, \
-	lr_W = 2.5e-12, lr_b = 0.2, max_iter = 150, eps = 1e-6, print_freq = 5):
+	lr_W = 2.5e-12, lr_b = 0.2, max_iter = 150, eps = 1e-6, print_freq = 25):
 	'''
 		X is matrix with dimension m x n.
 		y is label with dimension m x 1.
@@ -161,31 +167,56 @@ def grad_descent(X_train, y_train, X_val, y_val, reg = 0.0, \
 	obj_val = []
 	print('==> Running gradient descent...')
 	iter_num = 0
+	t_start = time.time()
 	# Running the gradient descent algorithm
-	# First, calculate the gradient for W and b, respectively
+	# First, calculate the training rmse and validation rmse at each iteration
+	# Append these values to obj_train and obj_val respectively
+	# Then, calculate the gradient for W and b as W_grad and b_grad
+	# Upgrade W and b
 	# Keep iterating while the number of iterations is less than the maximum
 	# and the gradient is larger than the threshold
 	# YOUR CODE GOES BELOW
-	while np.linalg.norm(W_grad) > eps and np.linalg.norm(b_grad) > eps and iter_num < max_iter:
+	while np.linalg.norm(W_grad) > eps and np.linalg.norm(b_grad) > eps \
+	and iter_num < max_iter:
 		# calculate norms
 		train_rmse = np.sqrt(np.linalg.norm((X_train @ W).reshape((-1, 1)) \
 			+ b - y_train) ** 2 / m_train)
 		obj_train.append(train_rmse)
 		val_rmse = np.sqrt(np.linalg.norm((X_val @ W).reshape((-1, 1)) \
 			+ b - y_val) ** 2 / m_val)
-		obj_train.append(val_rmse)
+		obj_val.append(val_rmse)
 		# calculate gradient
-		W_grad = ((X_train.T @ X_train + reg * np.eye(n)) @ W + X_train.T @ (b - y_train)) / m_train
+		W_grad = ((X_train.T @ X_train + reg * np.eye(n)) @ W \
+			+ X_train.T @ (b - y_train)) / m_train
 		b_grad = (sum(X_train @ W) - sum(y_train) + b * m_train) / m_train
 		# update weights and bias
 		W -= lr_W * W_grad
 		b -= lr_b * b_grad
 		# print statements
 		if (iter_num + 1) % print_freq == 0:
-			print('-- Iteration{} - objective {: 4.4f} - \
-				grad {: 4.4E}'.format(iter_num + 1, train_rmse, \
+			print('-- Iteration{} - training rmse {: 4.4f} - \
+				gradient norm {: 4.4E}'.format(iter_num + 1, train_rmse, \
 					np.linalg.norm(W_grad)))
 		iter_num += 1
+
+	# Benchmark report
+	t_end = time.time()
+	print('--Time elapsed for training: {t:4.2f} \
+		seconds'.format(t = t_end - t_start))
+	# generate convergence plot
+	train_rmse_plot, = plt.plot(range(iter_num), obj_train)
+	plt.setp(train_rmse_plot, color = 'red')
+	val_rmse_plot, = plt.plot(range(iter_num), obj_val)
+	plt.setp(val_rmse_plot, color = 'green')
+	plt.legend((train_rmse_plot, val_rmse_plot), \
+		('Training RMSE', 'Validation RMSE'), loc = 'best')
+	plt.title('RMSE vs iteration')
+	plt.xlabel('iteration')
+	plt.ylabel('RMSE')
+	plt.savefig('convergence.png', format = 'png')
+	plt.close()
+	print('==> Plotting completed.')
+
 	return b, W
 
 # *****************************************************************
