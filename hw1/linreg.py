@@ -15,7 +15,7 @@ def linreg(X, y, reg=0.0):
 
 		Return the optimal weight matrix.
 	'''
-	# Hint: W_opt = (X.T * X + reg * I)^(-1) * X.T * y
+	# Hint: Find the numerical solution for part c
 	# Use np.eye to create identity matrix
 	# Use np.linalg.solve to solve W_opt
 
@@ -55,6 +55,7 @@ def RMSE_vs_lambda(X_train, y_train, X_val, y_val):
 		y is the label with dimension m x 1.
 
 		Genearte a plot of RMSE vs lambda.
+		Return the regularization parameter that minimizes RMSE.
 	'''
 	# Set up plot style
 	plt.style.use('ggplot')
@@ -84,8 +85,8 @@ def RMSE_vs_lambda(X_train, y_train, X_val, y_val):
 	# Find the regularization value that minimizes RMSE
 	# YOUR CODE GOES BELOW
 	opt_lambda_index = np.argmin(RMSE_list)
-	print('==> The optimal regularization parameter is {reg: 4.4f}.'.format(\
-		reg = reg_list[opt_lambda_index]))
+	reg_opt = reg_list[opt_lambda_index]
+	return reg_opt
 
 def norm_vs_lambda(X_train, y_train, X_val, y_val):
 	'''
@@ -115,9 +116,28 @@ def norm_vs_lambda(X_train, y_train, X_val, y_val):
 	plt.close()
 	print('==> Plotting completed.')
 
+def linreg_no_bias(X, y, reg = 0.0):
+	'''
+		X is matrix with dimension m x n.
+		y is label with dimension m x 1.
+		reg is the parameter for regularization.
+
+		Return the optimal weight and bias separately.
+	'''
+	# Find the numerical solution in part d
+	# YOUR CODE GOES BELOW
+	m = X.shape[0]
+	ones = np.eye(m)
+	Aggregate = X.T @ (np.eye(m) - np.ones(m) / m)
+	W_opt = np.linalg.solve(Aggregate @ X + reg * np.eye(Aggregate.shape[0]), \
+		Aggregate @ y)
+	b_opt = sum((y - X @ W_opt)) / m
+	return b_opt, W_opt
+
 # *****************************************************************
 # ====================main driver function=========================
 if __name__ == '__main__':
+	# Part c
 	# =============STEP 0: LOADING DATA=================
 	print('==> Loading data...')
 	train_pct = 2.0 / 3
@@ -159,9 +179,31 @@ if __name__ == '__main__':
 	# =============STEP 1: RMSE vs lambda=================
 	print('==> Step 1: RMSE vs lambda...')
 	# Fill in the code in linreg, findRMSE, and RMSE_vs_lambda
-	RMSE_vs_lambda(X_train, y_train, X_val, y_val)
+	reg_opt = RMSE_vs_lambda(X_train, y_train, X_val, y_val)
+	print('==> The optimal regularization parameter is {reg: 4.4f}.'.format(\
+		reg = reg_opt))
+	# Find the optimal weights and bias for future use in step 3
+	W_with_b_1 = linreg(X_train, y_train, reg = reg_opt)
+	b_opt_1 = W_with_b_1[0]
+	W_opt_1 = W_with_b_1[1: ]
 
 	# =============STEP 2: Norm vs lambda=================
 	print('==> Step 2: RMSE vs lambda...')
 	# Fill in the code in norm_vs_lambda
 	norm_vs_lambda(X_train, y_train, X_val, y_val)
+
+	# Part d
+	# =============STEP 3: Linear regression without bias=================
+	# From here on, we will strip the columns of ones for all data
+	X_train = X_train[:, 1:]
+	X_val = X_val[:, 1:]
+	X_test = X_test[:, 1:]
+	# Fill in the code in linreg_no_bias
+	# Compare the result with the one from step 1
+	# The difference in norm should be a small scalar (i.e, 1e-10)
+	print('==> Step 3: Linear regression without bias...')
+	b_opt_2, W_opt_2 = linreg_no_bias(X_train, y_train, reg = reg_opt)
+	diff_bias = np.linalg.norm(b_opt_2 - b_opt_1)
+	print('==> Difference in bias is {diff: 4.4E}'.format(diff = diff_bias))
+	diff_W = np.linalg.norm(W_opt_2 -W_opt_1)
+	print('==> Difference in weights is {diff: 4.4E}'.format(diff = diff_W))
