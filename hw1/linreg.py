@@ -46,7 +46,7 @@ def find_RMSE(W, X, y):
 	y_pred = predict(W, X)
 	diff = y - y_pred
 	m = X.shape[0]
-	MSE = np.linalg.norm(diff, 2) / m
+	MSE = np.linalg.norm(diff, 2) ** 2 / m
 	return np.sqrt(MSE)
 
 def RMSE_vs_lambda(X_train, y_train, X_val, y_val):
@@ -134,6 +134,60 @@ def linreg_no_bias(X, y, reg = 0.0):
 	b_opt = sum((y - X @ W_opt)) / m
 	return b_opt, W_opt
 
+def grad_descent(X_train, y_train, X_val, y_val, reg = 0.0, \
+	lr_W = 2.5e-12, lr_b = 0.2, max_iter = 150, eps = 1e-6, print_freq = 5):
+	'''
+		X is matrix with dimension m x n.
+		y is label with dimension m x 1.
+		reg is the parameter for regularization.
+		lr_W is the learning rate for weights.
+		lr_b is the learning rate for bias.
+		max_iter is the maximum number of iterations.
+		eps is the threshold of the norm for the gradients.
+		print_freq is the frequency of printing the report.
+
+		Return the optimal weight and bias by gradient descent.
+	'''
+	m_train, n = X_train.shape
+	m_val = X_val.shape[0]
+	# initialize the weights and bias and their corresponding gradients
+	# YOUR CODE GOES BELOW
+	W = np.zeros((n, 1))
+	b = 0.
+	W_grad = np.ones_like(W)
+	b_grad = 1.
+
+	obj_train = []
+	obj_val = []
+	print('==> Running gradient descent...')
+	iter_num = 0
+	# Running the gradient descent algorithm
+	# First, calculate the gradient for W and b, respectively
+	# Keep iterating while the number of iterations is less than the maximum
+	# and the gradient is larger than the threshold
+	# YOUR CODE GOES BELOW
+	while np.linalg.norm(W_grad) > eps and np.linalg.norm(b_grad) > eps and iter_num < max_iter:
+		# calculate norms
+		train_rmse = np.sqrt(np.linalg.norm((X_train @ W).reshape((-1, 1)) \
+			+ b - y_train) ** 2 / m_train)
+		obj_train.append(train_rmse)
+		val_rmse = np.sqrt(np.linalg.norm((X_val @ W).reshape((-1, 1)) \
+			+ b - y_val) ** 2 / m_val)
+		obj_train.append(val_rmse)
+		# calculate gradient
+		W_grad = ((X_train.T @ X_train + reg * np.eye(n)) @ W + X_train.T @ (b - y_train)) / m_train
+		b_grad = (sum(X_train @ W) - sum(y_train) + b * m_train) / m_train
+		# update weights and bias
+		W -= lr_W * W_grad
+		b -= lr_b * b_grad
+		# print statements
+		if (iter_num + 1) % print_freq == 0:
+			print('-- Iteration{} - objective {: 4.4f} - \
+				grad {: 4.4E}'.format(iter_num + 1, train_rmse, \
+					np.linalg.norm(W_grad)))
+		iter_num += 1
+	return b, W
+
 # *****************************************************************
 # ====================main driver function=========================
 if __name__ == '__main__':
@@ -201,9 +255,20 @@ if __name__ == '__main__':
 	# Fill in the code in linreg_no_bias
 	# Compare the result with the one from step 1
 	# The difference in norm should be a small scalar (i.e, 1e-10)
-	print('==> Step 3: Linear regression without bias...')
-	b_opt_2, W_opt_2 = linreg_no_bias(X_train, y_train, reg = reg_opt)
-	diff_bias = np.linalg.norm(b_opt_2 - b_opt_1)
+	# print('==> Step 3: Linear regression without bias...')
+	# b_opt_2, W_opt_2 = linreg_no_bias(X_train, y_train, reg = reg_opt)
+	# diff_bias = np.linalg.norm(b_opt_2 - b_opt_1)
+	# print('==> Difference in bias is {diff: 4.4E}'.format(diff = diff_bias))
+	# diff_W = np.linalg.norm(W_opt_2 -W_opt_1)
+	# print('==> Difference in weights is {diff: 4.4E}'.format(diff = diff_W))
+
+	# Part e
+	# =============STEP 4: Gradient descent=================
+	# Fill in the code in grad_descent
+	print('==> Step 4: Gradient descent')
+	b_gd, W_gd = grad_descent(X_train, y_train, X_val, y_val, reg = reg_opt)
+	# Compare the result from the one from step 1
+	diff_bias = np.linalg.norm(b_gd - b_opt_1)
 	print('==> Difference in bias is {diff: 4.4E}'.format(diff = diff_bias))
-	diff_W = np.linalg.norm(W_opt_2 -W_opt_1)
+	diff_W = np.linalg.norm(W_gd -W_opt_1)
 	print('==> Difference in weights is {diff: 4.4E}'.format(diff = diff_W))
