@@ -286,12 +286,12 @@ if __name__ == '__main__':
 	# Fill in the code in linreg_no_bias
 	# Compare the result with the one from step 1
 	# The difference in norm should be a small scalar (i.e, 1e-10)
-	# print('==> Step 3: Linear regression without bias...')
-	# b_opt_2, W_opt_2 = linreg_no_bias(X_train, y_train, reg = reg_opt)
-	# diff_bias = np.linalg.norm(b_opt_2 - b_opt_1)
-	# print('==> Difference in bias is {diff: 4.4E}'.format(diff = diff_bias))
-	# diff_W = np.linalg.norm(W_opt_2 -W_opt_1)
-	# print('==> Difference in weights is {diff: 4.4E}'.format(diff = diff_W))
+	print('==> Step 3: Linear regression without bias...')
+	b_opt_2, W_opt_2 = linreg_no_bias(X_train, y_train, reg = reg_opt)
+	diff_bias = np.linalg.norm(b_opt_2 - b_opt_1)
+	print('==> Difference in bias is {diff: 4.4E}'.format(diff = diff_bias))
+	diff_W = np.linalg.norm(W_opt_2 -W_opt_1)
+	print('==> Difference in weights is {diff: 4.4E}'.format(diff = diff_W))
 
 	# Part e
 	# =============STEP 4: Gradient descent=================
