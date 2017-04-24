@@ -131,6 +131,94 @@ def newton_method(X, y, reg = 0.0, eps = 1e-6, \
 
 	return W, nll_list
 
+def predict(X, W):
+	'''
+		Return the predicted labels.
+	'''
+	mu = sigmoid(X @ W)
+	return (mu >= 0.5).astype(int)
+
+def get_description(X, y, W):
+	'''
+		X is matrix with dimension m x (n + 1).
+		y is label with dimension m x 1.
+		W is the weight with dimension (n + 1) x 1.
+
+		Return the accuracy, precision, recall and F-1 score of the prediction.
+	'''
+	# YOUR CODE GOES BELOW
+	m, n = X.shape
+	y_pred = predict(X, W)
+	count_a, count_p, count_r = 0, 0, 0
+	total_p, total_r = 0, 0
+	for index in range(m):
+		actual, pred = y.item(index), y_pred.item(index)
+		if actual == pred:
+			count_a += 1
+		if actual == 1:
+			total_r += 1
+			if pred == 1:
+				count_r += 1
+		if pred == 1:
+			total_p += 1
+			if actual == 1:
+				count_p += 1
+	accuracy = 1. * count_a / m
+	precision = 1. * count_p / total_p
+	recall = 1. * count_r / total_r
+	f1 = 2. * precision * recall / (precision + recall)
+	return accuracy, precision, recall, f1
+
+def plot_description(X_train, y_train, X_test, y_test):
+	'''
+		X is matrix with dimension m x (n + 1).
+		y is label with dimension m x 1.
+
+		Plot accuracy/precision/recall/F-1 score versus lambda.
+		Return the lambda that maximizes accuracy.
+	'''
+	# YOUR CODE GOES BELOW
+	reg_list = [0., 0.01, 0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 30.0]
+	reg_list.sort()
+	a_list = []
+	p_list = []
+	r_list = []
+	f1_list = []
+	# Run Newton's method or gradient descent
+	for index in range(len(reg_list)):
+		reg = reg_list[index]
+		W_opt, obj = grad_descent(X_train, y_train, reg = reg, \
+			lr = 2e-4, print_freq = 100)
+		accuracy, precision, recall, f1 = get_description(X_test, y_test, W_opt)
+		a_list.append(accuracy)
+		p_list.append(precision)
+		r_list.append(recall)
+		f1_list.append(f1)
+
+	# Generate plots
+	a_vs_lambda_plot, = plt.plot(reg_list, a_list)
+	plt.setp(a_vs_lambda_plot, color = 'red')
+	p_vs_lambda_plot, = plt.plot(reg_list, p_list)
+	plt.setp(p_vs_lambda_plot, color = 'green')
+	r_vs_lambda_plot, = plt.plot(reg_list, r_list)
+	plt.setp(r_vs_lambda_plot, color = 'blue')
+	f1_vs_lambda_plot, = plt.plot(reg_list, f1_list)
+	plt.setp(f1_vs_lambda_plot, color = 'yellow')
+	plt.legend((a_vs_lambda_plot, p_vs_lambda_plot, r_vs_lambda_plot, \
+		f1_vs_lambda_plot), ('accuracy', 'precision', 'recall', 'F-1'),\
+		 loc = 'best')
+	plt.title('Testing descriptions')
+	plt.xlabel('regularization parameter')
+	plt.ylabel('Metric')
+	plt.savefig('p2a_description.png', format = 'png')
+	plt.close()
+	print('==> Plotting completed.')
+
+	# Find the param that maximizes accuracy
+	opt_reg_index = np.argmax(a_list)
+	reg_opt = reg_list[opt_reg_index]
+	return reg_opt
+
 # *****************************************************************
 # ====================main driver function=========================
 if __name__ == '__main__':
@@ -173,8 +261,8 @@ if __name__ == '__main__':
 	print('==> Step 1b: Running Newton\'s method...')
 	W_newton, nll_list_newton = newton_method(X_train_logreg, y_train_logreg, \
 		reg = 1e-6)
-	# Generate the convergence plot
-	print('==> Printing convergence plot...')
+	# =============STEP 2: Generate convergence plot=================
+	print('==> Plotting convergence plot...')
 	plt.style.use('ggplot')
 	nll_gd_plot, = plt.plot(range(len(nll_list_gd)), nll_list_gd)
 	plt.setp(nll_gd_plot, color = 'red')
@@ -188,3 +276,9 @@ if __name__ == '__main__':
 	plt.savefig('p2a_convergence.png', format = 'png')
 	plt.close()
 	print('==> Plotting completed.')
+	# =============STEP 3: Generate accuracy/precision plot=================
+	# Fill in the code in get_description and plot_description
+	print('Step 3: ==> Generating plots for accuracy, precision, recall, and F-1 score...')
+	reg_opt = plot_description(X_train_logreg, y_train_logreg, \
+		X_test_logreg, y_test_logreg)
+	print('==> Optimal regularization parameter is {:4.4f}'.format(reg_opt))
