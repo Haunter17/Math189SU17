@@ -33,6 +33,7 @@ def predict(X, W):
 	'''
 		Return y_pred with dimension m x 1.
 	'''
+	# YOUR CODE BELOW
 	mu = X @ W
 	exp_mu = np.exp(mu)
 	prob = exp_mu / exp_mu.sum(axis=1).reshape(-1, 1)
@@ -95,8 +96,39 @@ def grad_descent(X, y, reg=0.0, lr=1e-5, eps=1e-6, \
 
 	return W, nll_list
 
+def accuracy_vs_lambda(X_train, y_train_OH, X_test, y_test, lambda_list):
+	'''
+		Generate accuracy for all given regularization parameters.
+		Generate a plot of accuracy vs lambda.
+		Return the lambda with optimal accuracy.
+	'''
+	# Find corresponding accuracy values for each parameter
+	accu_list = []
+	# YOUR CODE BELOW
+	for reg in lambda_list:
+		W, nll_list = grad_descent(X_train, y_train_OH, reg=reg, lr=2e-5, \
+		print_freq=50)
+		y_pred = predict(X_test, W)
+		accuracy = get_accuracy(y_pred, y_test)
+		accu_list.append(accuracy)
+		print('-- Accuracy is {:2.4f} for lambda = {:2.2f}'.format(accuracy, reg))
+	# Plot accuracy vs lambda
+	print('==> Printing accuracy vs lambda...')
+	plt.style.use('ggplot')
+	plt.plot(lambda_list, accu_list)
+	plt.title('Accuracy versus Lambda in Softmax Regression')
+	plt.xlabel('Lambda')
+	plt.ylabel('Accuracy')
+	plt.savefig('p2b_lva.png', format = 'png')
+	plt.close()
+	print('==> Plotting completed.')
+	# Find optimal lambda
+	opt_lambda_index = np.argmax(accu_list)
+	reg_opt = lambda_list[opt_lambda_index]
+	return reg_opt
+
 # *****************************************************************
-# ====================main driver function=========================
+# ====================main driver function: Softmax=========================
 if __name__ == '__main__':
 	# =============STEP 0: LOADING DATA=================
 	df_train = data.df_train
@@ -117,8 +149,25 @@ if __name__ == '__main__':
 	y_train_OH = enc.fit_transform(y_train.copy()).astype(int).toarray()
 	y_test_OH = enc.fit_transform(y_test.copy()).astype(int).toarray()
 
-	# =============STEP 1: Softmax Regression=================
-	print('==> Step 1a: Running softmax regression with gradient descent...')
-	# Fill in the code in NLL and grad_descent
-	W_gd, nll_list_gd = grad_descent(X_train, y_train_OH, reg=1, lr=2e-5, \
-		print_freq=25)
+	# =============STEP 1: Accuracy versus lambda=================
+	print('==> Step 1: Finding optimal regularization parameter...')
+	# Fill in the code in NLL, grad_softmax, and grad_descent
+	# Then, fill in predict and accuracy_vs_lambda
+	lambda_list = [0.01, 0.1, 0.5, 1.0, 10.0, 50.0, 100.0, 200.0, 500.0, 1000.0]
+	reg_opt = accuracy_vs_lambda(X_train, y_train_OH, X_test, y_test, lambda_list)
+	print('-- Optimal regularization parameter is {:2.2f}'.format(reg_opt))
+	# =============STEP 2: Convergence plot=================
+	W_gd, nll_list_gd = grad_descent(X_train, y_train_OH, reg=reg_opt, max_iter=1500, lr=2e-5, \
+		print_freq=100)
+	print('==> Step 2: Plotting convergence plot...')
+	plt.style.use('ggplot')
+	# Plot the learning curve of NLL vs Iteration
+	# YOUR CODE BELOW
+	nll_gd_plot, = plt.plot(range(len(nll_list_gd)), nll_list_gd)
+	plt.setp(nll_gd_plot, color = 'red')
+	plt.title('Convergence Plot on Softmax Regression with $\lambda = {:2.2f}$'.format(reg_opt))
+	plt.xlabel('Iteration')
+	plt.ylabel('NLL')
+	plt.savefig('p2b_convergence.png', format = 'png')
+	plt.close()
+	print('==> Plotting completed.')
