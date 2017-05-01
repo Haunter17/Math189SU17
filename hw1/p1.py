@@ -6,7 +6,7 @@ The file is seperated into two parts:
 	2) the main driver.
 
 The helper functions are all functions necessary to finish the problem.
-The main driver will use the helper function you finished to report and print
+The main driver will use the helper functions you finished to report and print
 out the results you need for the problem.
 
 Before attemping the helper functions, please familiarize with pandas and numpy
@@ -110,7 +110,7 @@ def RMSE_vs_lambda(X_train, y_train, X_val, y_val):
 		HINT: get a list of RMSE following the steps below:
 			1) Constuct reg_list, a list of regularization parameters with
 			   random uniform sampling
-			2) Generate w_list, a list of W_opt's according to regularization
+			2) Generate W_list, a list of W_opt's according to regularization
 			   parameters generated above
 			3) Generate, RMSE_list, a list of RMSE according to reg_list
 	"""
@@ -279,6 +279,8 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
 	print('--Time elapsed for training: {t:4.2f} \
 		seconds'.format(t = t_end - t_start))
 
+	# Set up plot style
+	plt.style.use('ggplot')
 
 	# generate convergence plot
 	train_rmse_plot, = plt.plot(range(iter_num), obj_train)
