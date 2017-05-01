@@ -128,11 +128,11 @@ def RMSE_vs_lambda(X_train, y_train, X_val, y_val):
 
 	# Plot RMSE vs lambda
 	RMSE_vs_lambda_plot, = plt.plot(reg_list, RMSE_list)
-	plt.setp(RMSE_vs_lambda_plot, color = 'red')
+	plt.setp(RMSE_vs_lambda_plot, color='red')
 	plt.title('RMSE vs lambda')
 	plt.xlabel('lambda')
 	plt.ylabel('RMSE')
-	plt.savefig('RMSE_vs_lambda.png', format = 'png')
+	plt.savefig('RMSE_vs_lambda.png', format='png')
 	plt.close()
 	print('==> Plotting completed.')
 
@@ -175,11 +175,11 @@ def norm_vs_lambda(X_train, y_train, X_val, y_val):
 
 	# Plot norm vs lambda
 	norm_vs_lambda_plot, = plt.plot(reg_list, norm_list)
-	plt.setp(norm_vs_lambda_plot, color = 'blue')
+	plt.setp(norm_vs_lambda_plot, color='blue')
 	plt.title('norm vs lambda')
 	plt.xlabel('lambda')
 	plt.ylabel('norm')
-	plt.savefig('norm_vs_lambda.png', format = 'png')
+	plt.savefig('norm_vs_lambda.png', format='png')
 	plt.close()
 	print('==> Plotting completed.')
 
@@ -211,7 +211,7 @@ def linreg_no_bias(X, y, reg=0.0):
 	# Benchmark report
 	t_end = time.time()
 	print('--Time elapsed for training: {t:4.2f} \
-		seconds'.format(t = t_end - t_start))
+		seconds'.format(t=t_end - t_start))
 
 	return b_opt, W_opt
 
@@ -277,22 +277,22 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
 	# Benchmark report
 	t_end = time.time()
 	print('--Time elapsed for training: {t:4.2f} \
-		seconds'.format(t = t_end - t_start))
+		seconds'.format(t=t_end - t_start))
 
 	# Set up plot style
 	plt.style.use('ggplot')
 
 	# generate convergence plot
 	train_rmse_plot, = plt.plot(range(iter_num), obj_train)
-	plt.setp(train_rmse_plot, color = 'red')
+	plt.setp(train_rmse_plot, color='red')
 	val_rmse_plot, = plt.plot(range(iter_num), obj_val)
-	plt.setp(val_rmse_plot, color = 'green')
+	plt.setp(val_rmse_plot, color='green')
 	plt.legend((train_rmse_plot, val_rmse_plot), \
-		('Training RMSE', 'Validation RMSE'), loc = 'best')
+		('Training RMSE', 'Validation RMSE'), loc='best')
 	plt.title('RMSE vs iteration')
 	plt.xlabel('iteration')
 	plt.ylabel('RMSE')
-	plt.savefig('convergence.png', format = 'png')
+	plt.savefig('convergence.png', format='png')
 	plt.close()
 	print('==> Plotting completed.')
 
@@ -315,7 +315,7 @@ if __name__ == '__main__':
 
 	# Read data
 	df = pd.read_csv('https://math189r.github.io/hw/data/online_news_popularity/online_news_popularity.csv', \
-		sep = ', ', engine = 'python')
+		sep=', ', engine='python')
 
 	# split the data frame by type: training, validation, and test
 	train_pct = 2.0 / 3
@@ -373,10 +373,10 @@ if __name__ == '__main__':
 	# find the optimal regularization parameter
 	reg_opt = RMSE_vs_lambda(X_train, y_train, X_val, y_val)
 	print('==> The optimal regularization parameter is {reg: 4.4f}.'.format(\
-		reg = reg_opt))
+		reg=reg_opt))
 
 	# Find the optimal weights and bias for future use in step 3
-	W_with_b_1 = linreg(X_train, y_train, reg = reg_opt)
+	W_with_b_1 = linreg(X_train, y_train, reg=reg_opt)
 	b_opt_1 = W_with_b_1[0]
 	W_opt_1 = W_with_b_1[1: ]
 
@@ -402,15 +402,15 @@ if __name__ == '__main__':
 	# Compare the result with the one from step 1
 	# The difference in norm should be a small scalar (i.e, 1e-10)
 	print('==> Step 3: Linear regression without bias...')
-	b_opt_2, W_opt_2 = linreg_no_bias(X_train, y_train, reg = reg_opt)
+	b_opt_2, W_opt_2 = linreg_no_bias(X_train, y_train, reg=reg_opt)
 
 	# difference in bias
 	diff_bias = np.linalg.norm(b_opt_2 - b_opt_1)
-	print('==> Difference in bias is {diff: 4.4E}'.format(diff = diff_bias))
+	print('==> Difference in bias is {diff: 4.4E}'.format(diff=diff_bias))
 
 	# difference in weights
 	diff_W = np.linalg.norm(W_opt_2 -W_opt_1)
-	print('==> Difference in weights is {diff: 4.4E}'.format(diff = diff_W))
+	print('==> Difference in weights is {diff: 4.4E}'.format(diff=diff_W))
 
 
 
@@ -419,13 +419,13 @@ if __name__ == '__main__':
 	# NOTE: Fill in code in grad_descent for this step
 
 	print('==> Step 4: Gradient descent')
-	b_gd, W_gd = grad_descent(X_train, y_train, X_val, y_val, reg = reg_opt)
+	b_gd, W_gd = grad_descent(X_train, y_train, X_val, y_val, reg=reg_opt)
 
 	# Compare the result from the one from step 1
 	# Difference in bias
 	diff_bias = np.linalg.norm(b_gd - b_opt_1)
-	print('==> Difference in bias is {diff: 4.4E}'.format(diff = diff_bias))
+	print('==> Difference in bias is {diff: 4.4E}'.format(diff=diff_bias))
 
 	# difference in weights
 	diff_W = np.linalg.norm(W_gd -W_opt_1)
-	print('==> Difference in weights is {diff: 4.4E}'.format(diff = diff_W))
+	print('==> Difference in weights is {diff: 4.4E}'.format(diff=diff_W))
