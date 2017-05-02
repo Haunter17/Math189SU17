@@ -15,8 +15,9 @@ http://pandas.pydata.org/pandas-docs/stable/tutorials.html
 https://docs.scipy.org/doc/numpy-dev/user/quickstart.html
 
 First, fill in the the code of step 0 in the main driver to load the data, then
-comment out any steps in main driver before you finish the corresponding
-functions for that step.
+please COMMENT OUT any steps in main driver before you finish the corresponding
+functions for that step. Otherwise, you won't be able to run the program
+because of errors.
 
 After finishing the helper functions for each step, you can uncomment
 the code in main driver to check the result.
@@ -252,6 +253,7 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
 
 	"*** END YOUR CODE HERE ***"
 
+
 	print('==> Running gradient descent...')
 
 	# TODO: run gradient descent algorithm
@@ -269,10 +271,25 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
 	iter_num = 0
 
 	t_start = time.time()
-	"*** YOUR CODE HERE ***"
+
+	# start iteration for gradient descent
+	while np.linalg.norm(W_grad) > eps and np.linalg.norm(b_grad) > eps \
+		and iter_num < max_iter:
+
+		"*** YOUR CODE HERE ***"
 
 
-	"*** END YOUR CODE HERE ***"
+		"*** END YOUR CODE HERE ***"
+
+		# print statements for debugging
+		if (iter_num + 1) % print_freq == 0:
+			print('-- Iteration{} - training rmse {: 4.4f} - \
+				gradient norm {: 4.4E}'.format(iter_num + 1, train_rmse, \
+					np.linalg.norm(W_grad)))
+
+		# goes to next iteration
+		iter_num += 1
+
 
 	# Benchmark report
 	t_end = time.time()
