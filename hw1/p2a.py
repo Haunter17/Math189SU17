@@ -36,67 +36,133 @@ import time
 
 
 #########################
-#	    Step 1&2		#
+#	    Step 1a`		#
 #########################
 
 def sigmoid(x):
-	'''
-		The sigmoid function.
-	'''
+	"""	This function takes in one argument:
+			1) x, a numpy array
+
+		This function applies the sigmoid / logistic function on each entry of
+		the input array returns the new array.
+
+		NOTE: You don't need to change this function.
+	"""
 	return 1. / (1. + np.exp(-x))
 
-def grad_logreg(X, y, W, reg = 0.0):
-	'''
-		Return the gradient of W for logistic regression.
-	'''
-	# YOUR CODE BELOW
+
+
+def grad_logreg(X, y, W, reg=0.0):
+	"""	This function takes in four arguments:
+			1) X, the data matrix with dimension m x (n + 1)
+			2) y, the label of the data with dimension m x 1
+			3) W, a weight matrix with bias
+			4) reg, the parameter for regularization
+
+		This function calculates and returns the gradient of W for logistic
+		regression.
+
+		HINT:
+			1) Recall the log likelihood function for logistic regression and
+			   get the gradient with respect to the weight matrix, W
+			2) Remember to apply the l2 regularization
+			2) You will need to use the sigmoid function above
+
+		NOTE: Please use the variable given for the gradient, grad.
+	"""
+	# TODO: Find the gradient of logistic regression with respect to W
+	"*** YOUR CODE HERE ***"
+
+
+	"*** END YOUR CODE HERE ***"
 	return grad
 
-def newton_step(X, y, W, reg = 0.0):
-	'''
-	Return d, the change of W according to Newton's method.
-	'''
-	# YOUR CODE BELOW
-	return d
 
-def NLL(X, y, W, reg = 0.0):
-	'''
-		Calculate negative log likelihood.
-	'''
-	# YOUR CODE GOES BELOW
+
+
+def NLL(X, y, W, reg=0.0):
+	"""	This function takes in four arguments:
+			1) X, the data matrix with dimension m x (n + 1)
+			2) y, the label of the data with dimension m x 1
+			3) W, a weight matrix with bias
+			4) reg, the parameter for regularization
+
+		This function calculates and returns negative log likelihood of the
+		logistic regression with l2 regularization
+
+		HINT:
+			1) Recall the negative log likelihood function for logistic regression.
+			2) Use a.sum() to find the summation of all entries in a numpy
+			   array a
+			3) Use np.linalg.norm to find the norm of a given vector
+			4) Use np.log to caculate the log of each entry of the input array
+
+		NOTE: please use the variable given for the final returned result, nll.
+	"""
+	# TODO: Find the negative log likelihood of logistic regression
+	"*** YOUR CODE HERE ***"
+
+
+	"*** END YOUR CODE HERE ***"
 	return nll
 
-def grad_descent(X, y, reg = 0.0, lr = 1e-4, eps = 1e-6, \
-	max_iter = 500, print_freq = 20):
-	'''
-		X is matrix with dimension m x (n + 1).
-		y is label with dimension m x 1.
-		reg is the parameter for regularization.
-		lr is the learning rate.
-		eps is the threshold of the norm for the gradients.
-		max_iter is the maximum number of iterations.
-		print_freq is the frequency of printing the report.
 
-		Return the optimal weight by gradient descent and
-		the corresponding learning objectives.
-	'''
+
+def grad_descent(X, y, reg=0.0, lr=1e-4, eps=1e-6, max_iter=500, print_freq=20):
+	"""	This function takes in seven arguments:
+			1) X, the data with dimension m x (n + 1)
+			2) y, the label of data with dimension m x 1
+			3) reg, the parameter for regularization
+			4) lr, the learning rate
+			5) max_iter, the maximum number of iterations
+			6) eps, the threshold of the norm for the gradients
+			7) print_freq, the frequency of printing the report
+
+		This function returns W, the optimal weight by gradient descent,
+		and nll_list, the corresponding learning objectives.
+	"""
+	# get the shape of the data, and initiate nll list
 	m, n = X.shape
 	nll_list = []
+
 	# initialize the weight and its gradient
 	W = np.zeros((n, 1))
 	W_grad = np.ones_like(W)
+
+
 	print('==> Running gradient descent...')
+
+	# Start iteration for gradient descent
 	iter_num = 0
 	t_start = time.time()
-	# Running the gradient descent algorithm
-	# Update W
-	# Calculate learning objectives
+
+
+	# TODO: run gradient descent algorithms
+
+	# HINT: Run the gradient descent algorithm followed steps below
+	#	1) Calculate the negative log likelihood at each iteration and
+	#	   append the value to nll_list
+	#	2) Calculate the gradient for W
+	#	3) Upgrade W
+	#	4) Keep iterating while the number of iterations is less than the
+	#	   maximum and the gradient is larger than the threshold
+
 	while iter_num < max_iter and np.linalg.norm(W_grad) > eps:
-		# YOUR CODE GOES BELOW
+
+		"*** YOUR CODE HERE ***"
+
+
+		"*** END YOUR CODE HERE ***"
+
+		# Print statements for debugging
 		if (iter_num + 1) % print_freq == 0:
 			print('-- Iteration {} - \
 				negative log likelihood {: 4.4f}'.format(iter_num + 1, nll))
+
+		# Goes to the next iteration
 		iter_num += 1
+
+
 	# benchmark
 	t_end = time.time()
 	print('-- Time elapsed for running gradient descent: {t:2.2f} \
@@ -104,37 +170,94 @@ def grad_descent(X, y, reg = 0.0, lr = 1e-4, eps = 1e-6, \
 
 	return W, nll_list
 
-def newton_method(X, y, reg = 0.0, eps = 1e-6, \
-	max_iter = 20, print_freq = 5):
-	'''
-		X is matrix with dimension m x (n + 1).
-		y is label with dimension m x 1.
-		reg is the parameter for regularization.
-		eps is the threshold of the norm for the gradients.
-		max_iter is the maximum number of iterations.
-		print_freq is the frequency of printing the report.
 
-		Return the optimal weight by Netwon's method and the corresponding
-		learning objectives.
-	'''
+
+#########################
+#	    Step 1a`		#
+#########################
+
+def newton_step(X, y, W, reg=0.0):
+	"""	This function takes in four arguments:
+			1) X, the data matrix with dimension m x (n + 1)
+			2) y, the label of the data with dimension m x 1
+			3) W, a weight matrix with bias
+			4) reg, the parameter for regularization
+
+		This function calculates and returns the change of W according to
+		the Newton's method
+
+		HINT: get the result following the steps below
+			1) Calculate the gradient of log likelihood, grad, with respect to W
+			2) Use np.diag to create a diagonal matrix, with mu*(1-mu) being the
+			   entries on the diagonal
+			3) Calculate the Hessian matrix, H, of logistic regression following
+			   the equation (you will need to use the diagonal matrix created)
+			4) Using np.linalg.solve to solve for d in the equation Hd = -grad
+
+		NOTE: Please use the variable given for final returned result, d.
+	"""
+	# TODO: Find the change of the weight according Newton's methods
+	"*** YOUR CODE HERE ***"
+
+
+	"*** END YOUR CODE HERE ***"
+	return d
+
+
+
+def newton_method(X, y, reg=0.0, eps=1e-6, max_iter=20, print_freq=5):
+	"""	This function takes in six arguments:
+			1) X, the data with dimension m x (n + 1)
+			2) y, the label of data with dimension m x 1
+			3) reg, the parameter for regularization
+			4) eps, the threshold of the norm for the gradients
+			5) max_iter, the maximum number of iterations
+			6) print_freq, the frequency of printing the report
+
+		This function returns W, the optimal weight by Newton's Method,
+		and nll_list, the corresponding learning objectives.
+	"""
+	# get the shape of the data, and initiate nll list
 	m, n = X.shape
 	nll_list = []
+
 	# initialize the weight and its gradient
 	W = np.zeros((n, 1))
 	step = np.ones_like(W)
+
 	print('==> Running Newton\'s method...')
+
+	# Start iteration for gradient descent
 	iter_num = 0
 	t_start = time.time()
-	# Running the Newton's method
-	# Update W
-	# Calculate learning objectives
-	while iter_num < max_iter and np.linalg.norm(step) > eps:
-		# YOUR CODE GOES BELOW
 
+	# TODO: run gradient descent algorithms
+
+	# HINT: Run the gradient descent algorithm followed steps below
+	#	1) Calculate the negative log likelihood at each iteration and
+	#	   append the value to nll_list
+	#	2) Calculate the gradient for W using newton_step defined above
+	#	3) Upgrade W
+	#	4) Keep iterating while the number of iterations is less than the
+	#	   maximum and the gradient is larger than the threshold
+
+	while iter_num < max_iter and np.linalg.norm(step) > eps:
+
+		"*** YOUR CODE HERE ***"
+
+
+		"*** END YOUR CODE HERE ***"
+
+		# Print statements for debugging
 		if (iter_num + 1) % print_freq == 0:
 			print('-- Iteration {} - \
 				negative log likelihood {: 4.4f}'.format(iter_num + 1, nll))
+
+		# Goes to the next iteration
 		iter_num += 1
+
+
+
 	# benchmark
 	t_end = time.time()
 	print('-- Time elapsed for running Newton\'s method: {t:2.2f} \
@@ -150,49 +273,98 @@ def newton_method(X, y, reg = 0.0, eps = 1e-6, \
 #########################
 
 def predict(X, W):
-	'''
-		Return the predicted labels.
-	'''
+	"""	This function takes in two arguments:
+			1) W, a weight matrix with bias
+			2) X, the data with dimension m x (n + 1)
+
+		This function calculates and returns the predicted label.
+
+		NOTE: You don't need to change this function.
+	"""
 	mu = sigmoid(X @ W)
 	return (mu >= 0.5).astype(int)
 
 
+
 def get_description(X, y, W):
-	'''
-		X is matrix with dimension m x (n + 1).
-		y is label with dimension m x 1.
-		W is the weight with dimension (n + 1) x 1.
+	"""	This function takes in three arguments:
+			1) X, the data matrix with dimension m x (n + 1)
+			2) y, the label of the data with dimension m x 1.
+			3) W, the weight matrix with bias and dimension (n + 1) x 1
 
-		Return the accuracy, precision, recall and F-1 score of the prediction.
-	'''
-	# YOUR CODE GOES BELOW
+		This function calculates and returns the accuracy, precision,
+		recall and F-1 score of the prediction.
 
+		HINT:
+			1) Get the predict lables using predict defined above
+			2) Accuracy = probability of correct prediction
+			3) Precision = probability of true label being 1 given that the
+			   predicted label is 1
+			4) Recall = probablity of predicted label being 1 given that the
+			   true label is 1
+			5) F-1 = 2*p*r / (p + r), where p = precision and r = recall
+
+		NOTE: Please use the variable given for final returned results.
+	"""
+	# TODO: Find the accuracy, precision, recall, and f-1 score of the prediction
+	"*** YOUR CODE HERE ***"
+
+
+	"*** END YOUR CODE HERE ***"
 	return accuracy, precision, recall, f1
 
-def plot_description(X_train, y_train, X_test, y_test):
-	'''
-		X is matrix with dimension m x (n + 1).
-		y is label with dimension m x 1.
 
-		Plot accuracy/precision/recall/F-1 score versus lambda.
-		Return the lambda that maximizes accuracy.
-	'''
+
+
+def plot_description(X_train, y_train, X_test, y_test):
+	"""	This function takes in four arguments:
+			1) X_train, the training data with dimension m x (n + 1)
+			2) y_train, the label of training data with dimension m x 1
+			3) X_val, the validation data with dimension m x (n + 1)
+			4) y_val, the label of validation data with dimension m x 1
+
+		This function plots the accuracy/precision/recall/F-1 score versus
+		lambda and returns the lambda that maximizes accuracy.
+	"""
 	reg_list = []
 	a_list = []
 	p_list = []
 	r_list = []
 	f1_list = []
-	# YOUR CODE GOES BELOW
+
+	# TODO: Find the list of accuracy, precision, recall, and f-1 score of the
+	# prediction given a list of different lambda
+
+	# HINT:
+	# 	1) First, generate/create a list of different lambda
+	#   2) For each lambda, run gradient descent and obtain the optimal weights
+	# 	3) Get accuracy, precision, recall and f1 with the data and W_opt
+	#	   obtained, and append those into the corresponding list
+
+	"*** YOUR CODE HERE ***"
+
+
+	"*** END YOUR CODE HERE ***"
+
 
 	# Generate plots
+	# plot accurary versus lambda
 	a_vs_lambda_plot, = plt.plot(reg_list, a_list)
 	plt.setp(a_vs_lambda_plot, color = 'red')
+
+	# plot precision versus lambda
 	p_vs_lambda_plot, = plt.plot(reg_list, p_list)
 	plt.setp(p_vs_lambda_plot, color = 'green')
+
+	# plot recall versus lambda
 	r_vs_lambda_plot, = plt.plot(reg_list, r_list)
 	plt.setp(r_vs_lambda_plot, color = 'blue')
+
+	# plot f1 score versus lambda
 	f1_vs_lambda_plot, = plt.plot(reg_list, f1_list)
 	plt.setp(f1_vs_lambda_plot, color = 'yellow')
+
+	# Set up the legend, titles, etc. for the plots
 	plt.legend((a_vs_lambda_plot, p_vs_lambda_plot, r_vs_lambda_plot, \
 		f1_vs_lambda_plot), ('accuracy', 'precision', 'recall', 'F-1'),\
 		 loc = 'best')
@@ -201,11 +373,15 @@ def plot_description(X_train, y_train, X_test, y_test):
 	plt.ylabel('Metric')
 	plt.savefig('p2a_description.png', format = 'png')
 	plt.close()
+
 	print('==> Plotting completed.')
 
-	# Find the param that maximizes accuracy
-	# YOUR CODE GOES BELOW
 
+	# TODO: Find the lambda, reg_opt, that maximizes accuracy
+	"*** YOUR CODE HERE ***"
+
+
+	"*** END YOUR CODE HERE ***"
 	return reg_opt
 
 
