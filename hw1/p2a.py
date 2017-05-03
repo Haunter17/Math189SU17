@@ -440,7 +440,7 @@ if __name__ == '__main__':
 
 
 	# ========STEP 1a: Gradient descent=========
-	# NOTE: Fill in the code in NLL and grad_descent for this step
+	# NOTE: Fill in the code in grad_logreg, NLL and grad_descent for this step
 
 	print('==> Step 1a: Running gradient descent...')
 	W_gd, nll_list_gd = grad_descent(X_train_logreg, y_train_logreg, reg = 1e-6)
