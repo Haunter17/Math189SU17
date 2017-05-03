@@ -18,7 +18,7 @@ the code in main driver to check the result.
 
 Note:
 1. Please read the instructions and hints carefully, and use the name of the
-variables we providesd, otherwise, the function may not work.
+variables we provided, otherwise, the function may not work.
 
 2. Remember to comment out the TODO comment after you finish each part.
 """
@@ -114,8 +114,8 @@ def grad_descent(X, y, reg=0.0, lr=1e-4, eps=1e-6, max_iter=500, print_freq=20):
 			2) y, the label of data with dimension m x 1
 			3) reg, the parameter for regularization
 			4) lr, the learning rate
-			5) max_iter, the maximum number of iterations
-			6) eps, the threshold of the norm for the gradients
+			5) eps, the threshold of the norm for the gradients
+			6) max_iter, the maximum number of iterations
 			7) print_freq, the frequency of printing the report
 
 		This function returns W, the optimal weight by gradient descent,
