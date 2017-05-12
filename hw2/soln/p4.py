@@ -132,8 +132,8 @@ def grad_lasso(
 		obj_list.append(cost)
 		if (iter_num + 1) % print_freq == 0:
 			print('-- Iteration{} - training cost {: .4E} - \
-				gradient norm {: .4E}'.format(iter_num + 1, cost, \
-					np.linalg.norm(W_grad)))
+				sparsity {: .2f}'.format(iter_num + 1, cost, \
+					(np.abs(W) < reg * lr).mean()))
 		iter_num += 1
 	"*** END YOUR CODE HERE ***"
 	# Benchmark report
@@ -163,4 +163,4 @@ if __name__ == '__main__':
 	# =============STEP 1: LASSO GRADIENT DESCENT=================
 	# NOTE: Fill in code in find_MSE, find_grad, prox and 
 	# grad_lasso for this step
-	W_opt = grad_lasso(X, y)
+	W = grad_lasso(X, y, reg=1e10)
