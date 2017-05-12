@@ -40,6 +40,48 @@ import time
 #########################################
 #			 Helper Functions	    	#
 #########################################
+def predict(W, X):
+	"""	This function takes in two arguments:
+			1) W, a weight matrix with bias
+			2) X, the data with dimension m x (n + 1)
+
+		This function calculates and returns the predicted label, y_pred.
+
+		NOTE: You don't need to change this function.
+	"""
+	return X @ W
+
+def find_MSE(W, X, y):
+	"""	This function takes in three arguments:
+			1) W, a weight matrix with bias
+			2) X, the data with dimension m x (n + 1)
+			3) y, the label of the data with dimension m x 1
+
+		This function calculates and returns the mean-squared error, MSE
+	"""
+	# TODO: Solve for the mean-squared error, MSE
+	"*** YOUR CODE HERE ***"
+	y_pred = predict(W, X)
+	diff = y - y_pred
+	m = X.shape[0]
+	MSE = np.linalg.norm(diff, 2) ** 2 / m
+	"*** END YOUR CODE HERE ***"
+	return MSE
+
+def grad(X, y, W, reg=0.0):
+	"""	This function takes in four arguments:
+			1) X, the data with dimension m x (n + 1)
+			2) y, the label of the data with dimension m x 1
+			3) W, a weight matrix with bias
+			4) reg, the parameter for regularization
+
+		This function calculates and returns the gradient of W
+	"""
+	"*** YOUR CODE HERE ***"
+	m = X.shape[0]
+	return X.T @ (X @ W - y) / m
+	"*** END YOUR CODE HERE ***"
+
 ###########################################
 #	    	Main Driver Function       	  #
 ###########################################
