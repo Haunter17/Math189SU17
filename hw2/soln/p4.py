@@ -40,17 +40,6 @@ import time
 #########################################
 #			 Helper Functions	    	#
 #########################################
-def predict(W, X):
-	"""	This function takes in two arguments:
-			1) W, a weight matrix with bias
-			2) X, the data with dimension m x (n + 1)
-
-		This function calculates and returns the predicted label, y_pred.
-
-		NOTE: You don't need to change this function.
-	"""
-	return X @ W
-
 def find_cost(X, y, W , reg):
 	"""	This function takes in three arguments:
 			1) W, a weight matrix with bias
@@ -91,13 +80,13 @@ def prox(X, gamma):
 	"""
 	"""*** YOUR CODE HERE ***"""
 	X[np.abs(X) <= gamma] = 0.
-	X[X > gamma] -= gamma
-	X[X < -gamma] += gamma
+	X[X > gamma] = X[X > gamma] - gamma
+	X[X < -gamma] = X[X < -gamma] + gamma
 	""" END YOUR CODE HERE """
 	return X
 
 def grad_lasso(
-	X, y, reg=1e-6, lr=1e-3, eps=1e-5,
+	X, y, reg=1e6, lr=1e-3, eps=1e-5,
 	max_iter=300, batch_size=256, print_freq=1):
 	""" This function takes in the following arguments:
 			1) X, the data with dimension m x (n + 1)
@@ -112,11 +101,14 @@ def grad_lasso(
 		This function returns W, the optimal weight, 
 		by lasso gradient descent.
 	"""
+	y = y.reshape(-1, 1)
 	m, n = X.shape
 	obj_list = []
 	# initialize the weight and its gradient
 	W = np.linalg.solve(X.T @ X, X.T @ y)
-	W_grad = np.ones_like(W)
+	ind = np.random.randint(0, m, size=batch_size)
+	obj_list = [find_cost(X[ind], y[ind], W, reg=reg)]
+	W_grad = find_grad(X[ind], y[ind], W)
 	print('==> Running gradient descent...')
 	iter_num = 0
 	t_start = time.time()
@@ -131,7 +123,7 @@ def grad_lasso(
 		cost = find_cost(X[ind], y[ind], W, reg=reg)
 		obj_list.append(cost)
 		if (iter_num + 1) % print_freq == 0:
-			print('-- Iteration{} - training cost {: .4E} - \
+			print('-- Iteration{} - training cost {: .4f} - \
 				sparsity {: .2f}'.format(iter_num + 1, cost, \
 					(np.abs(W) < reg * lr).mean()))
 		iter_num += 1
@@ -142,6 +134,27 @@ def grad_lasso(
 		seconds'.format(t = t_end - t_start))
 	return W
 
+def lasso_path(X, y, tau_min=1e-8, tau_max=10, num_reg=10):
+	""" This function takes in the following arguments:
+			1) X, the data with dimension m x (n + 1)
+			2) y, the label of the data with dimension m x 1
+			3) tau_min, the minimum value for the inverse of regularization parameter
+			4) tau_max, the maximum value for the inverse of regularization parameter
+			5) num_reg, the number of regularization parameters
+		
+		This function returns the list of optimal weights and the corresponding tau values.
+	"""
+	m, n = X.shape
+	W = np.zeros((n, num_reg))
+	tau_list = np.linspace(tau_min, tau_max, num_reg)
+	for index in range(num_reg):
+		reg = 1. / tau_list[index]
+		print('--regularization parameter is {:.4E}'.format(reg))
+		W[:, index] = grad_lasso(X, y, reg=reg, lr=1e-12, \
+			max_iter=1000, batch_size=1024, print_freq=1000).flatten()
+	return W, tau_list
+
+
 ###########################################
 #	    	Main Driver Function       	  #
 ###########################################
@@ -150,10 +163,8 @@ def grad_lasso(
 # you have not completed yet
 
 if __name__ == '__main__':
-
 	# =============STEP 0: LOADING DATA=================
 	print('==> Loading data...')
-
 	# Read data
 	df = pd.read_csv('https://math189r.github.io/hw/data/online_news_popularity/online_news_popularity.csv', \
 		sep=', ', engine='python')
@@ -163,4 +174,17 @@ if __name__ == '__main__':
 	# =============STEP 1: LASSO GRADIENT DESCENT=================
 	# NOTE: Fill in code in find_MSE, find_grad, prox and 
 	# grad_lasso for this step
-	W = grad_lasso(X, y, reg=1e10)
+	# We don't require any output for this step, but you may test your
+	# implementation by running grad_lasso(X, y)
+
+	# =============STEP 2: LASSO PATH=================
+	# NOTE: Fill in code in lasso_path
+	print('==> Running lasso path...')
+	W, tau_list = lasso_path(X, y, tau_min=1e-8, tau_max=2e-2, num_reg=10)
+	# Plotting lasso path
+	plt.style.use('ggplot')
+	lp_plot = plt.plot(tau_list, W.T)
+	plt.title('Lasso Path')
+	plt.xlabel('$tau = \lambda^{-1}$')
+	plt.ylabel('$W_i$')
+	plt.show()
