@@ -80,13 +80,13 @@ def prox(X, gamma):
 	"""
 	"""*** YOUR CODE HERE ***"""
 	X[np.abs(X) <= gamma] = 0.
-	X[X > gamma] = X[X > gamma] - gamma
-	X[X < -gamma] = X[X < -gamma] + gamma
+	X[X > gamma] -= gamma
+	X[X < -gamma] += gamma
 	""" END YOUR CODE HERE """
 	return X
 
 def grad_lasso(
-	X, y, reg=1e6, lr=1e-3, eps=1e-5,
+	X, y, reg=1e6, lr=1e-12, eps=1e-5,
 	max_iter=300, batch_size=256, print_freq=1):
 	""" This function takes in the following arguments:
 			1) X, the data with dimension m x (n + 1)
@@ -101,14 +101,11 @@ def grad_lasso(
 		This function returns W, the optimal weight, 
 		by lasso gradient descent.
 	"""
-	y = y.reshape(-1, 1)
 	m, n = X.shape
 	obj_list = []
 	# initialize the weight and its gradient
 	W = np.linalg.solve(X.T @ X, X.T @ y)
-	ind = np.random.randint(0, m, size=batch_size)
-	obj_list = [find_cost(X[ind], y[ind], W, reg=reg)]
-	W_grad = find_grad(X[ind], y[ind], W)
+	W_grad = np.ones((n, 1))
 	print('==> Running gradient descent...')
 	iter_num = 0
 	t_start = time.time()
@@ -132,7 +129,7 @@ def grad_lasso(
 	t_end = time.time()
 	print('--Time elapsed for training: {t:4.2f} \
 		seconds'.format(t = t_end - t_start))
-	return W
+	return W, obj_list
 
 def lasso_path(X, y, tau_min=1e-8, tau_max=10, num_reg=10):
 	""" This function takes in the following arguments:
@@ -151,7 +148,7 @@ def lasso_path(X, y, tau_min=1e-8, tau_max=10, num_reg=10):
 		reg = 1. / tau_list[index]
 		print('--regularization parameter is {:.4E}'.format(reg))
 		W[:, index] = grad_lasso(X, y, reg=reg, lr=1e-12, \
-			max_iter=1000, batch_size=1024, print_freq=1000).flatten()
+			max_iter=1000, batch_size=1024, print_freq=1000)[0].flatten()
 	return W, tau_list
 
 
@@ -164,13 +161,14 @@ def lasso_path(X, y, tau_min=1e-8, tau_max=10, num_reg=10):
 
 if __name__ == '__main__':
 	# =============STEP 0: LOADING DATA=================
-	print('==> Loading data...')
+	print('==> Step 0: Loading data...')
 	# Read data
 	df = pd.read_csv('https://math189r.github.io/hw/data/online_news_popularity/online_news_popularity.csv', \
 		sep=', ', engine='python')
 	X = df[[col for col in df.columns if col not in ['url', 'shares', 'cohort']]]
 	y = np.log(df.shares).values.reshape(-1,1)
 	X = np.hstack((np.ones_like(y), X))
+
 	# =============STEP 1: LASSO GRADIENT DESCENT=================
 	# NOTE: Fill in code in find_MSE, find_grad, prox and 
 	# grad_lasso for this step
@@ -179,12 +177,31 @@ if __name__ == '__main__':
 
 	# =============STEP 2: LASSO PATH=================
 	# NOTE: Fill in code in lasso_path
-	print('==> Running lasso path...')
-	W, tau_list = lasso_path(X, y, tau_min=1e-8, tau_max=2e-2, num_reg=10)
+	print('==> Step 2: Running lasso path...')
+	W, tau_list = lasso_path(X, y, tau_min=1e-15, tau_max=2e-2, num_reg=10)
 	# Plotting lasso path
 	plt.style.use('ggplot')
+	plt.subplot(211)
 	lp_plot = plt.plot(tau_list, W.T)
 	plt.title('Lasso Path')
 	plt.xlabel('$tau = \lambda^{-1}$')
 	plt.ylabel('$W_i$')
-	plt.show()
+
+	# =============STEP 3: FEATURE SELECTION=================
+	print('==> Step 3: The most important features are: ')
+	top_features = np.array(df.columns)[np.argsort(-W[:, 0])[:5] + 1]
+	print(top_features)
+
+	# =============STEP 4: CONVERGENCE PLOT=================
+	print('==> Step 4: Generating convergence plot...')
+	plt.subplot(212)
+	W_reg, obj_list = grad_lasso(X, y, reg=1e5, lr=1e-12, eps=1e-2, max_iter=2500, \
+		batch_size=1024, print_freq=250)
+	plt.title("Lasso Objective Convergence: $\lambda = 1e5$")
+	plt.ylabel("Stochastic Objective")
+	plt.xlabel("Iteration")
+	plt.plot(obj_list)
+	plt.tight_layout()
+	plt.savefig('p4_lasso.png', format = 'png')
+	plt.close()
+	print('==> Plotting completed.')
