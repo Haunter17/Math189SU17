@@ -20,7 +20,7 @@ def grad_logreg(X, y, W, reg = 0.0):
 	return X.T @ (sigmoid(X @ W) - y) + reg * W
 
 def newton_step(X, y, W, reg = 0.0):
-	''' 
+	'''
 	Return the change of W according to Newton's method.
 	'''
 	# YOUR CODE BELOW
@@ -52,7 +52,7 @@ def grad_descent(X, y, reg = 0.0, lr = 1e-4, eps = 1e-6, \
 		max_iter is the maximum number of iterations.
 		print_freq is the frequency of printing the report.
 
-		Return the optimal weight by gradient descent and 
+		Return the optimal weight by gradient descent and
 		the corresponding learning objectives.
 	'''
 	m, n = X.shape
@@ -97,7 +97,7 @@ def newton_method(X, y, reg = 0.0, eps = 1e-6, \
 		max_iter is the maximum number of iterations.
 		print_freq is the frequency of printing the report.
 
-		Return the optimal weight by Netwon's method and the corresponding 
+		Return the optimal weight by Netwon's method and the corresponding
 		learning objectives.
 	'''
 	m, n = X.shape
