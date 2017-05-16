@@ -331,7 +331,7 @@ if __name__ == '__main__':
 	print('==> Loading data...')
 
 	# Read data
-	df = pd.read_csv('https://math189r.github.io/hw/data/online_news_popularity/online_news_popularity.csv', \
+	df = pd.read_csv('https://math189su17.github.io/data/online_news_popularity.csv', \
 		sep=', ', engine='python')
 
 	# split the data frame by type: training, validation, and test

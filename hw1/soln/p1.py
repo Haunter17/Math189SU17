@@ -227,7 +227,7 @@ if __name__ == '__main__':
 	print('==> Loading data...')
 	train_pct = 2.0 / 3
 	val_pct = 5.0 / 6
-	df = pd.read_csv('https://math189r.github.io/hw/data/online_news_popularity/online_news_popularity.csv', \
+	df = pd.read_csv('https://math189su17.github.io/data/online_news_popularity.csv', \
 		sep = ', ', engine = 'python')
 	# split the data frame by type: training, validation, and test
 	df['type'] = ''
