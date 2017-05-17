@@ -1,5 +1,5 @@
 """
-Start file for hw1pr1 of Big Data Summer 2017
+Start file for hw1pr2 of Big Data Summer 2017
 
 Note:
 
@@ -26,7 +26,7 @@ if __name__ == '__main__':
 	m_opt = 62. / 35 # your solution from part a
 	b_opt = 18. / 35 # your solution from part a
 	X_space = np.linspace(-1, 5, num=100).reshape(-1, 1)
-	y_space = np.array([m_opt * x + b_opt for x in X_space]).reshape(-1, 1)
+	y_space = (m_opt * X_space + b_opt).reshape(-1, 1)
 	plt.plot(X_space, y_space)
 	plt.savefig('p6c.png', format='png')
 	plt.close()
@@ -34,10 +34,8 @@ if __name__ == '__main__':
 	# =============part d: Optimal linear fit with random data points=================
 	# generate random data points
 	mu, sigma, sampleSize = 0, 1, 100	
-	noice = np.random.normal(mu, sigma, sampleSize)
-	y_space_rand = np.zeros(len(X_space))
-	for i in range(len(X_space)):
-		y_space_rand[i] = m_opt * X_space[i] + b_opt + noice[i]
+	noise = np.random.normal(mu, sigma, sampleSize).reshape(-1, 1)
+	y_space_rand = m_opt * X_space + b_opt + noise
 	# calculate new weights
 	X_space_stacked = np.hstack((np.ones_like(y_space), X_space))
 	W_opt = np.linalg.solve(X_space_stacked.T @ X_space_stacked, 
