@@ -281,7 +281,7 @@ if __name__ == '__main__':
 		RMSE=test_RMSE))
 
 	# =============STEP 2: Norm vs lambda=================
-	print('\n==> Step 2: RMSE vs lambda...')
+	print('\n==> Step 2: Norm vs lambda...')
 	# Fill in the code in norm_vs_lambda
 	norm_vs_lambda(X_train, y_train, X_val, y_val)
 
