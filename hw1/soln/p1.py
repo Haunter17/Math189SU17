@@ -136,8 +136,8 @@ def linreg_no_bias(X, y, reg = 0.0):
 	b_opt = sum((y - X @ W_opt)) / m
 	# Benchmark report
 	t_end = time.time()
-	print('--Time elapsed for training: {t:4.2f} \
-		seconds'.format(t = t_end - t_start))
+	print('--Time elapsed for training: {t:4.2f} seconds'.format(\
+				t = t_end - t_start))
 	return b_opt, W_opt
 
 def grad_descent(X_train, y_train, X_val, y_val, reg = 0.0, \
@@ -194,15 +194,14 @@ def grad_descent(X_train, y_train, X_val, y_val, reg = 0.0, \
 		b -= lr_b * b_grad
 		# print statements
 		if (iter_num + 1) % print_freq == 0:
-			print('-- Iteration{} - training rmse {: 4.4f} - \
-				gradient norm {: 4.4E}'.format(iter_num + 1, train_rmse, \
-					np.linalg.norm(W_grad)))
+			print('-- Iteration{} - training rmse {: 4.4f} - gradient norm {: 4.4E}'.format(\
+				iter_num + 1, train_rmse, np.linalg.norm(W_grad)))
 		iter_num += 1
 
 	# Benchmark report
 	t_end = time.time()
-	print('--Time elapsed for training: {t:4.2f} \
-		seconds'.format(t = t_end - t_start))
+	print('--Time elapsed for training: {t:4.2f} seconds'.format(\
+			t = t_end - t_start))
 	# generate convergence plot
 	train_rmse_plot, = plt.plot(range(iter_num), obj_train)
 	plt.setp(train_rmse_plot, color = 'red')
@@ -262,7 +261,7 @@ if __name__ == '__main__':
 	y_test = np.matrix(y_test)
 
 	# =============STEP 1: RMSE vs lambda=================
-	print('==> Step 1: RMSE vs lambda...')
+	print('\n==> Step 1: RMSE vs lambda...')
 	# Fill in the code in linreg, findRMSE, and RMSE_vs_lambda
 	reg_opt = RMSE_vs_lambda(X_train, y_train, X_val, y_val)
 	print('==> The optimal regularization parameter is {reg: 4.4f}.'.format(\
@@ -271,9 +270,18 @@ if __name__ == '__main__':
 	W_with_b_1 = linreg(X_train, y_train, reg = reg_opt)
 	b_opt_1 = W_with_b_1[0]
 	W_opt_1 = W_with_b_1[1: ]
+	# Report the RMSE with the found optimal weights on validation set
+	val_RMSE = find_RMSE(W_with_b_1, X_val, y_val)
+	print('==> The RMSE on the validation set with the optimal regularization parameter is {RMSE: 4.4f}.'.format(\
+		RMSE=val_RMSE))
+
+	# Report the RMSE with the found optimal weights on test set
+	test_RMSE = find_RMSE(W_with_b_1, X_test, y_test)
+	print('==> The RMSE on the test set with the optimal regularization parameter is {RMSE: 4.4f}.'.format(\
+		RMSE=test_RMSE))
 
 	# =============STEP 2: Norm vs lambda=================
-	print('==> Step 2: RMSE vs lambda...')
+	print('\n==> Step 2: RMSE vs lambda...')
 	# Fill in the code in norm_vs_lambda
 	norm_vs_lambda(X_train, y_train, X_val, y_val)
 
@@ -286,7 +294,7 @@ if __name__ == '__main__':
 	# Fill in the code in linreg_no_bias
 	# Compare the result with the one from step 1
 	# The difference in norm should be a small scalar (i.e, 1e-10)
-	print('==> Step 3: Linear regression without bias...')
+	print('\n==> Step 3: Linear regression without bias...')
 	b_opt_2, W_opt_2 = linreg_no_bias(X_train, y_train, reg = reg_opt)
 	diff_bias = np.linalg.norm(b_opt_2 - b_opt_1)
 	print('==> Difference in bias is {diff: 4.4E}'.format(diff = diff_bias))
@@ -296,7 +304,7 @@ if __name__ == '__main__':
 	# Part e
 	# =============STEP 4: Gradient descent=================
 	# Fill in the code in grad_descent
-	print('==> Step 4: Gradient descent')
+	print('\n==> Step 4: Gradient descent')
 	b_gd, W_gd = grad_descent(X_train, y_train, X_val, y_val, reg = reg_opt)
 	# Compare the result from the one from step 1
 	diff_bias = np.linalg.norm(b_gd - b_opt_1)
