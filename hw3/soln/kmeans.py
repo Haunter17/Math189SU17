@@ -1,5 +1,5 @@
 """
-Start file for keans of Big Data Summer 2017
+Starter file for keans of Big Data Summer 2017
 
 The file is seperated into two parts:
 	1) the helper functions
@@ -14,8 +14,7 @@ libraries. Tutorials can be found online:
 http://pandas.pydata.org/pandas-docs/stable/tutorials.html
 https://docs.scipy.org/doc/numpy-dev/user/quickstart.html
 
-First, fill in the the code of step 0 in the main driver to load the data, then
-please COMMENT OUT any steps in main driver before you finish the corresponding
+Please COMMENT OUT any steps in main driver before you finish the corresponding
 functions for that step. Otherwise, you won't be able to run the program
 because of errors.
 
@@ -87,9 +86,9 @@ def k_means(X, k, eps=1e-6, max_iter=1000, print_freq=10):
 		cost = k_means_cost(X, clusters, label)
 		cost_list.append(cost)
 		if (iter_num + 1) % print_freq == 0:
-			print('--Iteration {} - cost {:4.4E}'.format(iter_num + 1, cost))
+			print('-- Iteration {} - cost {:4.4E}'.format(iter_num + 1, cost))
 		if np.linalg.norm(prev_clusters - clusters) <= eps:
-			print('--Algorithm converges at iteration {} \
+			print('-- Algorithm converges at iteration {} \
 				with cost {:4.4E}'.format(iter_num + 1, cost))
 			break
 		iter_num += 1
@@ -140,12 +139,38 @@ if __name__ == '__main__':
 	X = np.array(df[:][features]).astype(int)
 
 	# =============STEP 1: Implementing K-MEANS=================
-	# NOTE: Fill in the code in k_means() and k_means_cost()
-	clusters, label, cost_list = k_means(X, 10)
-	X_cluster = clusters[label.flatten()]
+	# TODO: Fill in the code in k_means() and k_means_cost()
+	# NOTE: You may test your implementations by running k_means(X, k)
+	# 		for any reasonable value of k
 
 	# =============STEP 2: FIND OPTIMAL NUMBER OF CLUSTERS=================
+	# TODO: calculate the cost for k between 1 and 20 and find the k with
+	# 		optimal cost
+	cost_k_list = []
+	for k in range(1, 21):
+		"*** YOUR CODE HERE ***"
+		clusters, label, cost_list = k_means(X, k)
+		cost = cost_list[-1]
+		cost_k_list.append(cost)
+		"*** END YOUR CODE HERE ***"
+		print('-- Number of clusters: {} - cost: {:.4E}'.format(k, cost))
+	opt_k = np.argmin(cost_k_list) + 1
+	print('-- Optimal number of clusters is {}'.format(opt_k))
+	# Generate cost vs k
+	cost_vs_k_plot, = plt.plot(range(1, 21), cost_k_list, 'g^')
+	opt_cost_plot, = plt.plot(opt_k, min(cost_k_list), 'rD')
+	plt.title('Cost vs Number of Clusters')
+	plt.savefig('kmeans_1.png', format='png')
+	plt.close()
 	# =============STEP 3: VISUALIZATION=================
-	data, = plt.plot(X[:, 0], X[:, 1], 'bo')
-	centers, = plt.plot(X_cluster[:, 0], X_cluster[:, 1], 'rD')
-	plt.show()
+	# Generate visualization on running k-means on the optimal k value
+	clusters, label, cost_list = k_means(X, opt_k)
+	X_cluster = clusters[label.flatten()]
+	data_plot, = plt.plot(X[:, 0], X[:, 1], 'bo')
+	center_plot, = plt.plot(X_cluster[:, 0], X_cluster[:, 1], 'rD')
+	plt.title('Visualization with {} clusters'.format(opt_k))
+	# set up legend and save the plot to the current folder
+	plt.legend((data_plot, center_plot), \
+		('data', 'clusters'), loc = 'best')
+	plt.savefig('kemans_2.png', format='png')
+	plt.close()
