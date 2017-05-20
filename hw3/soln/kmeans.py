@@ -26,6 +26,7 @@ Note:
 1. When filling out the functions below, remember to
 	1) Let m be the number of samples
 	2) Let n be the number of features
+	3) Let k be the number of clusters
 
 2. Please read the instructions and hints carefully, and use the name of the
 variables we provided, otherwise, the function may not work.
@@ -41,25 +42,33 @@ import time
 #			 Helper Functions	    	#
 #########################################
 
-def k_means(X, num_clusters, eps=1e-6, max_iter=1000, print_freq=10):
+def k_means(X, k, eps=1e-6, max_iter=1000, print_freq=10):
 	"""	This function takes in the following arguments:
 			1) X, the data matrix with dimension m x n
-			2) num_clusters, the number of clusters
+			2) k, the number of clusters
 			3) eps, the threshold of the norm of the change in clusters
 			4) max_iter, the maximum number of iterations
 			5) print_freq, the frequency of printing the report
 		
-		This function calculates the center of each cluster with the
-		k-means algorithm.
+		This function returns the following:
+			1) clusters, a list of clusters with dimension k x 1
+			2) label, the label of cluster for each data with dimension m x 1
+			3) cost_list, a list of costs at each iteration
 
 		HINT: 
 
 		NOTE: 
 	"""
 	m, n = X.shape
+	cost_list = []
+	t_start = time.time()
 	"*** YOUR CODE HERE ***"
-	clusters = X.std() * np.random.randn(num_clusters, 2) + X.mean()
-	label = -1. * np.ones((m, 1))
+	mu_x, std_x = X[:, 0].mean(), X[:, 0].std()
+	mu_y, std_y = X[:, 1].mean(), X[:, 1].std()
+	clusters_x = np.random.normal(mu_x, std_x, size=(k, 1))
+	clusters_y = np.random.normal(mu_y, std_y, size=(k, 1))
+	clusters = np.hstack((clusters_x, clusters_y))
+	label = np.zeros((m, 1)).astype(int)
 	iter_num = 0
 	while iter_num < max_iter:
 		prev_clusters = copy.deepcopy(clusters)
@@ -67,17 +76,30 @@ def k_means(X, num_clusters, eps=1e-6, max_iter=1000, print_freq=10):
 		for i in range(m):
 			data = X[i, :]
 			diff = data - clusters
-			label[i] = np.argsort(np.linalg.norm(data - diff, axis=1)).item(0)
+			curr_label = np.argsort(np.linalg.norm(diff, axis=1)).item(0)
+			label[i] = curr_label
 		# update centers
-		for k in range(num_clusters):
-			ind = np.where(label == k)[0]
-			clusters[k, :] = X[ind].mean(axis=0)
+		for cluster_num in range(k):
+			ind = np.where(label == cluster_num)[0]
+			if len(ind) > 0:
+				clusters[cluster_num, :] = X[ind].mean(axis=0)
+		# calculate costs
+		cost = k_means_cost(X, clusters, label)
+		cost_list.append(cost)
+		if (iter_num + 1) % print_freq == 0:
+			print('--Iteration {} - cost {:4.4E}'.format(iter_num + 1, cost))
 		if np.linalg.norm(prev_clusters - clusters) <= eps:
+			print('--Algorithm converges at iteration {} \
+				with cost {:4.4E}'.format(iter_num + 1, cost))
 			break
 		iter_num += 1
 	"*** END YOUR CODE HERE ***"
+	t_end = time.time()
+	print('-- Time elapsed for running gradient descent: {t:2.2f} \
+		seconds'.format(t=t_end - t_start))
+	return clusters, label, cost_list
 
-def knn_cost(X, clusters, label):
+def k_means_cost(X, clusters, label):
 	"""	This function takes in the following arguments:
 			1) X, the data matrix with dimension m x n
 			2) clusters, the matrix with dimension k x 1
@@ -94,9 +116,10 @@ def knn_cost(X, clusters, label):
 	m, n = X.shape
 	k = clusters.shape[0]
 	"*** YOUR CODE HERE ***"
-	
+	X_cluster = clusters[label.flatten()]
+	cost = (np.linalg.norm(X - X_cluster, axis=1) ** 2).sum()
 	"*** END YOUR CODE HERE ***"
-
+	return cost
 
 	
 ###########################################
@@ -115,10 +138,14 @@ if __name__ == '__main__':
 	features = ['x', 'y']
 	df = pd.read_csv(path, sep='  ', names = columns, engine='python')
 	X = np.array(df[:][features]).astype(int)
+
 	# =============STEP 1: Implementing K-MEANS=================
-	# NOTE: Fill in the code in k-means()
+	# NOTE: Fill in the code in k_means() and k_means_cost()
+	clusters, label, cost_list = k_means(X, 10)
+	X_cluster = clusters[label.flatten()]
 
 	# =============STEP 2: FIND OPTIMAL NUMBER OF CLUSTERS=================
-	# NOTE: Fill in the code in cost()
-
-
+	# =============STEP 3: VISUALIZATION=================
+	data, = plt.plot(X[:, 0], X[:, 1], 'bo')
+	centers, = plt.plot(X_cluster[:, 0], X_cluster[:, 1], 'rD')
+	plt.show()
