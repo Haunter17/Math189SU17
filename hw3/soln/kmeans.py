@@ -62,11 +62,6 @@ def k_means(X, k, eps=1e-10, max_iter=1000, print_freq=10):
 	m, n = X.shape
 	cost_list = []
 	t_start = time.time()
-	# mu_x, std_x = X[:, 0].mean(), X[:, 0].std()
-	# mu_y, std_y = X[:, 1].mean(), X[:, 1].std()
-	# clusters_x = np.random.normal(mu_x, std_x, size=(k, 1))
-	# clusters_y = np.random.normal(mu_y, std_y, size=(k, 1))
-	# clusters = np.hstack((clusters_x, clusters_y))
 	clusters = np.random.multivariate_normal((.5 + np.random.rand(n)) * X.mean(axis=0), 10 * X.std(axis=0) * np.eye(n), \
 		size=k)
 	label = np.zeros((m, 1)).astype(int)
@@ -133,95 +128,55 @@ def k_means_cost(X, clusters, label):
 
 if __name__ == '__main__':
 	# =============STEP 0: LOADING DATA=================
-	# print('==> Step 0: Loading data...')
-	# # Read data
-	# path = '../5000_points.csv'
-	# columns = ['x', 'space', 'y']
-	# features = ['x', 'y']
-	# df = pd.read_csv(path, sep='  ', names = columns, engine='python')
-	# X = np.array(df[:][features]).astype(int)
+	print('==> Step 0: Loading data...')
+	# Read data
+	path = '../5000_points.csv'
+	columns = ['x', 'space', 'y']
+	features = ['x', 'y']
+	df = pd.read_csv(path, sep='  ', names = columns, engine='python')
+	X = np.array(df[:][features]).astype(int)
 
 
-	# # =============STEP 1a: Implementing K-MEANS=================
-	# # TODO: Fill in the code in k_means() and k_means_cost()
-	# # NOTE: You may test your implementations by running k_means(X, k)
-	# # 		for any reasonable value of k
+	# =============STEP 1a: Implementing K-MEANS=================
+	# TODO: Fill in the code in k_means() and k_means_cost()
+	# NOTE: You may test your implementations by running k_means(X, k)
+	# 		for any reasonable value of k
 
-	# # =============STEP 1b: FIND OPTIMAL NUMBER OF CLUSTERS=================
-	# # TODO: calculate the cost for k between 1 and 20 and find the k with
-	# # 		optimal cost
-	# print('==> Step 1: Finding optimal number of clusters...')
-	# cost_k_list = []
-	# for k in range(1, 21):
-	# 	"*** YOUR CODE HERE ***"
-	# 	clusters, label, cost_list = k_means(X, k)
-	# 	cost = cost_list[-1]
-	# 	cost_k_list.append(cost)
-	# 	"*** END YOUR CODE HERE ***"
-	# 	print('-- Number of clusters: {} - cost: {:.4E}'.format(k, cost))
-	# opt_k = np.argmin(cost_k_list) + 1
-	# print('-- Optimal number of clusters is {}'.format(opt_k))
-	# # TODO: Generate plot of cost vs k
-	# "*** YOUR CODE HERE ***"
-	# cost_vs_k_plot, = plt.plot(range(1, 21), cost_k_list, 'g^')
-	# opt_cost_plot, = plt.plot(opt_k, min(cost_k_list), 'rD')
-	# "*** END YOUR CODE HERE ***"
-	# plt.title('Cost vs Number of Clusters')
-	# plt.savefig('kmeans_1.png', format='png')
-	# plt.close()
+	# =============STEP 1b: FIND OPTIMAL NUMBER OF CLUSTERS=================
+	# TODO: calculate the cost for k between 1 and 20 and find the k with
+	# 		optimal cost
+	print('==> Step 1: Finding optimal number of clusters...')
+	cost_k_list = []
+	for k in range(1, 21):
+		"*** YOUR CODE HERE ***"
+		clusters, label, cost_list = k_means(X, k)
+		cost = cost_list[-1]
+		cost_k_list.append(cost)
+		"*** END YOUR CODE HERE ***"
+		print('-- Number of clusters: {} - cost: {:.4E}'.format(k, cost))
+	opt_k = np.argmin(cost_k_list) + 1
+	print('-- Optimal number of clusters is {}'.format(opt_k))
+	# TODO: Generate plot of cost vs k
+	"*** YOUR CODE HERE ***"
+	cost_vs_k_plot, = plt.plot(range(1, 21), cost_k_list, 'g^')
+	opt_cost_plot, = plt.plot(opt_k, min(cost_k_list), 'rD')
+	"*** END YOUR CODE HERE ***"
+	plt.title('Cost vs Number of Clusters')
+	plt.savefig('kmeans_1.png', format='png')
+	plt.close()
 
-	# # =============STEP 1c: VISUALIZATION=================
-	# # TODO: Generate visualization on running k-means on the optimal k value
-	# # NOTE: Be sure to mark the cluster centers from the data point
-	# "*** YOUR CODE HERE ***"
-	# clusters, label, cost_list = k_means(X, opt_k)
-	# X_cluster = clusters[label.flatten()]
-	# data_plot, = plt.plot(X[:, 0], X[:, 1], 'bo')
-	# center_plot, = plt.plot(X_cluster[:, 0], X_cluster[:, 1], 'rD')
-	# "*** END YOUR CODE HERE ***"
-	# # set up legend and save the plot to the current folder
-	# plt.legend((data_plot, center_plot), \
-	# 	('data', 'clusters'), loc = 'best')
-	# plt.title('Visualization with {} clusters'.format(opt_k))
-	# plt.savefig('kemans_2.png', format='png')
-	# plt.close()
-
-	# =============STEP 2a: GENERATING ANOTHER DATASET=================
-	print('==> Step 2a: Generating random dataset...')
-	circle_r = 10. + np.random.rand(500, 1)
-	center_x, center_y = 3., -4.
-	alpha = 2 * np.pi * np.random.rand(500, 1)
-	X_1 = np.hstack((circle_r * np.cos(alpha) + center_x, \
-		circle_r * np.sin(alpha) + center_y))
-	# X_2 = np.random.multivariate_normal([center_x, center_y], np.eye(2), \
-	# 	size=500)
-	circle_r = 5. + np.random.rand(300, 1)
-	alpha = 2 * np.pi * np.random.rand(300, 1)
-	X_2 = np.hstack((circle_r * np.cos(alpha) + center_x, \
-		circle_r * np.sin(alpha) + center_y))
-	X = np.vstack((X_1, X_2))
-	np.random.shuffle(X)
-
-	# =============STEP 2b: RUNNING K-MEANS ON NEW DATASET=================
-	# clusters, label, cost_list = k_means(X, 2)
-	# ind_0, ind_1 = np.where(label == 0)[0], np.where(label == 1)[0]
-	# c0_plot, = plt.plot(X[ind_0, 0], X[ind_0, 1], 'bo')
-	# c1_plot, = plt.plot(X[ind_1, 0], X[ind_1, 1], 'ro')
-	# # set up legend and save the plot to the current folder
-	# plt.legend((c0_plot, c1_plot), \
-	# 	('cluster 0', 'cluster 1'), loc = 'best')
-	# plt.title('Visualization with 2 clusters')
-	# plt.show()
-	# Do you think that the clustering found by the algorithm make sense?
-
-	# =============STEP 2c: RUNNING K-MEANS WITH KERNELS=================
-	K = rbf_kernel(X)
-	clusters, label, cost_list = k_means(K, 2)
-	ind_0, ind_1 = np.where(label == 0)[0], np.where(label == 1)[0]
-	c0_plot, = plt.plot(X[ind_0, 0], X[ind_0, 1], 'bo')
-	c1_plot, = plt.plot(X[ind_1, 0], X[ind_1, 1], 'ro')
+	# =============STEP 1c: VISUALIZATION=================
+	# TODO: Generate visualization on running k-means on the optimal k value
+	# NOTE: Be sure to mark the cluster centers from the data point
+	"*** YOUR CODE HERE ***"
+	clusters, label, cost_list = k_means(X, opt_k)
+	X_cluster = clusters[label.flatten()]
+	data_plot, = plt.plot(X[:, 0], X[:, 1], 'bo')
+	center_plot, = plt.plot(X_cluster[:, 0], X_cluster[:, 1], 'rD')
+	"*** END YOUR CODE HERE ***"
 	# set up legend and save the plot to the current folder
-	plt.legend((c0_plot, c1_plot), \
-		('cluster 0', 'cluster 1'), loc = 'best')
-	plt.title('Visualization with 2 clusters on rbf kernels')
-	plt.show()
+	plt.legend((data_plot, center_plot), \
+		('data', 'clusters'), loc = 'best')
+	plt.title('Visualization with {} clusters'.format(opt_k))
+	plt.savefig('kemans_2.png', format='png')
+	plt.close()
