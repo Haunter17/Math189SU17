@@ -33,7 +33,7 @@ def predict(W, X):
 
 		Return the predicted label, y_pred.
 	'''
-	return X * W
+	return X @ W
 
 def find_RMSE(W, X, y):
 	'''
