@@ -1,5 +1,5 @@
 """
-Starter file for keans of Big Data Summer 2017
+Starter file for k-means of Big Data Summer 2017
 
 The file is seperated into two parts:
 	1) the helper functions
@@ -156,21 +156,26 @@ if __name__ == '__main__':
 		print('-- Number of clusters: {} - cost: {:.4E}'.format(k, cost))
 	opt_k = np.argmin(cost_k_list) + 1
 	print('-- Optimal number of clusters is {}'.format(opt_k))
-	# Generate cost vs k
+	# TODO: Generate plot of cost vs k
+	"*** YOUR CODE HERE ***"
 	cost_vs_k_plot, = plt.plot(range(1, 21), cost_k_list, 'g^')
 	opt_cost_plot, = plt.plot(opt_k, min(cost_k_list), 'rD')
+	"*** END YOUR CODE HERE ***"
 	plt.title('Cost vs Number of Clusters')
 	plt.savefig('kmeans_1.png', format='png')
 	plt.close()
 	# =============STEP 3: VISUALIZATION=================
-	# Generate visualization on running k-means on the optimal k value
+	# TODO: Generate visualization on running k-means on the optimal k value
+	# NOTE: Be sure to mark the cluster centers from the data point
+	"*** YOUR CODE HERE ***"
 	clusters, label, cost_list = k_means(X, opt_k)
 	X_cluster = clusters[label.flatten()]
 	data_plot, = plt.plot(X[:, 0], X[:, 1], 'bo')
 	center_plot, = plt.plot(X_cluster[:, 0], X_cluster[:, 1], 'rD')
-	plt.title('Visualization with {} clusters'.format(opt_k))
+	"*** END YOUR CODE HERE ***"
 	# set up legend and save the plot to the current folder
 	plt.legend((data_plot, center_plot), \
 		('data', 'clusters'), loc = 'best')
+	plt.title('Visualization with {} clusters'.format(opt_k))
 	plt.savefig('kemans_2.png', format='png')
 	plt.close()
