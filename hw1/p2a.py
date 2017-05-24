@@ -1,5 +1,5 @@
 """
-Start file for hw1pr2 part(a) of Big Data Summer 2017
+Start file for hw4pr2 part(a) of Big Data Summer 2017
 
 The file is seperated into two parts:
 	1) the helper functions
@@ -66,7 +66,7 @@ def grad_logreg(X, y, W, reg=0.0):
 			1) Recall the log likelihood function for logistic regression and
 			   get the gradient with respect to the weight matrix, W
 			2) Remember to apply the l2 regularization
-			2) You will need to use the sigmoid function above
+			3) You will need to use the sigmoid function above
 
 		NOTE: Please use the variable given for the gradient, grad.
 	"""
@@ -146,6 +146,10 @@ def grad_descent(X, y, reg=0.0, lr=1e-4, eps=1e-6, max_iter=500, print_freq=20):
 	#	3) Upgrade W
 	#	4) Keep iterating while the number of iterations is less than the
 	#	   maximum and the gradient is larger than the threshold
+
+	# NOTE: When calculating negative log likelihood at each iteration, please
+	#		use variable name nll to store the value. Otherwise, there might be
+	# 		error when you run the code.
 
 	while iter_num < max_iter and np.linalg.norm(W_grad) > eps:
 
@@ -371,7 +375,7 @@ def plot_description(X_train, y_train, X_test, y_test):
 	plt.title('Testing descriptions')
 	plt.xlabel('regularization parameter')
 	plt.ylabel('Metric')
-	plt.savefig('p2a_description.png', format = 'png')
+	plt.savefig('hw4pr2a_description.png', format = 'png')
 	plt.close()
 
 	print('==> Plotting completed.')
@@ -478,7 +482,7 @@ if __name__ == '__main__':
 	plt.title('Convergence Plot on Binary MNIST Classification')
 	plt.xlabel('Iteration')
 	plt.ylabel('NLL')
-	plt.savefig('p2a_convergence.png', format = 'png')
+	plt.savefig('hw4pr2a_convergence.png', format = 'png')
 	plt.close()
 
 	print('==> Plotting completed.')
