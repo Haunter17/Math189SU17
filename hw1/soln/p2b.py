@@ -17,7 +17,7 @@ def NLL(X, y, W, reg=0.0):
 	exp_mu = np.exp(mu)
 	prob = exp_mu / exp_mu.sum(axis=1).reshape(-1, 1)
 	groundTruth = y * np.log(prob)
-	return groundTruth.sum(axis=1).sum()
+	return groundTruth.sum(axis=1).sum() - reg * np.diag(W.T @ W).sum()
 
 def grad_softmax(X, y, W, reg=0.0):
 	'''
