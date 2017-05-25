@@ -159,7 +159,7 @@ def grad_descent(X, y, reg=0.0, lr=1e-5, eps=1e-6, max_iter=500, print_freq=20):
 	W_grad = np.ones((n, k))
 
 
-	print('==> Running gradient descent...')
+	print('\n==> Running gradient descent...')
 
 	# Start iteration for gradient descent
 	iter_num = 0
@@ -191,8 +191,8 @@ def grad_descent(X, y, reg=0.0, lr=1e-5, eps=1e-6, max_iter=500, print_freq=20):
 
 		# Print statements for debugging
 		if (iter_num + 1) % print_freq == 0:
-			print('-- Iteration {} - \
-				negative log likelihood {: 4.4f}'.format(iter_num + 1, nll))
+			print('-- Iteration {} - negative log likelihood {: 4.4f}'.format(\
+					iter_num + 1, nll))
 
 		# Goes to the next iteration
 		iter_num += 1
@@ -200,8 +200,8 @@ def grad_descent(X, y, reg=0.0, lr=1e-5, eps=1e-6, max_iter=500, print_freq=20):
 
 	# benchmark
 	t_end = time.time()
-	print('-- Time elapsed for running gradient descent: {t:2.2f} \
-		seconds'.format(t=t_end - t_start))
+	print('-- Time elapsed for running gradient descent: {t:2.2f} seconds'.format(\
+			t=t_end - t_start))
 
 	return W, nll_list
 
@@ -305,12 +305,12 @@ if __name__ == '__main__':
 	# NOTE: Fill in the code in NLL, grad_softmax, predict and grad_descent.
 	# 		Then, fill in predict and accuracy_vs_lambda
 
-	print('==> Step 1: Finding optimal regularization parameter...')
+	print('\n\n==> Step 1: Finding optimal regularization parameter...')
 
 	lambda_list = [0.01, 0.1, 0.5, 1.0, 10.0, 50.0, 100.0, 200.0, 500.0, 1000.0]
 	reg_opt = accuracy_vs_lambda(X_train, y_train_OH, X_test, y_test, lambda_list)
 
-	print('-- Optimal regularization parameter is {:2.2f}'.format(reg_opt))
+	print('\n-- Optimal regularization parameter is {:2.2f}'.format(reg_opt))
 
 
 
@@ -325,7 +325,7 @@ if __name__ == '__main__':
 	W_gd, nll_list_gd = grad_descent(X_train, y_train_OH, reg=reg_opt,\
 	 	max_iter=1500, lr=2e-5, print_freq=100)
 
-	print('==> Step 2: Plotting convergence plot...')
+	print('\n==> Step 2: Plotting convergence plot...')
 
 	# set up style for the plot
 	plt.style.use('ggplot')

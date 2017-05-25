@@ -130,7 +130,7 @@ def grad_descent(X, y, reg=0.0, lr=1e-4, eps=1e-6, max_iter=500, print_freq=20):
 	W_grad = np.ones_like(W)
 
 
-	print('==> Running gradient descent...')
+	print('\n==> Running gradient descent...')
 
 	# Start iteration for gradient descent
 	iter_num = 0
@@ -160,8 +160,8 @@ def grad_descent(X, y, reg=0.0, lr=1e-4, eps=1e-6, max_iter=500, print_freq=20):
 
 		# Print statements for debugging
 		if (iter_num + 1) % print_freq == 0:
-			print('-- Iteration {} - \
-				negative log likelihood {: 4.4f}'.format(iter_num + 1, nll))
+			print('-- Iteration {} - negative log likelihood {: 4.4f}'.format(\
+					iter_num + 1, nll))
 
 		# Goes to the next iteration
 		iter_num += 1
@@ -169,8 +169,8 @@ def grad_descent(X, y, reg=0.0, lr=1e-4, eps=1e-6, max_iter=500, print_freq=20):
 
 	# benchmark
 	t_end = time.time()
-	print('-- Time elapsed for running gradient descent: {t:2.2f} \
-		seconds'.format(t = t_end - t_start))
+	print('-- Time elapsed for running gradient descent: {t:2.2f} seconds'.format(\
+			t = t_end - t_start))
 
 	return W, nll_list
 
@@ -254,8 +254,8 @@ def newton_method(X, y, reg=0.0, eps=1e-6, max_iter=20, print_freq=5):
 
 		# Print statements for debugging
 		if (iter_num + 1) % print_freq == 0:
-			print('-- Iteration {} - \
-				negative log likelihood {: 4.4f}'.format(iter_num + 1, nll))
+			print('-- Iteration {} - negative log likelihood {: 4.4f}'.format(\
+					iter_num + 1, nll))
 
 		# Goes to the next iteration
 		iter_num += 1
@@ -264,8 +264,8 @@ def newton_method(X, y, reg=0.0, eps=1e-6, max_iter=20, print_freq=5):
 
 	# benchmark
 	t_end = time.time()
-	print('-- Time elapsed for running Newton\'s method: {t:2.2f} \
-		seconds'.format(t = t_end - t_start))
+	print('-- Time elapsed for running Newton\'s method: {t:2.2f} seconds'.format(\
+			t = t_end - t_start))
 
 	return W, nll_list
 
@@ -421,7 +421,7 @@ if __name__ == '__main__':
 
 
 	# =============STEP 1: Logistic regression=================
-	print('==> Step 1: Running logistic regression...')
+	print('\n\n==> Step 1: Running logistic regression...')
 
 	# splitting data for logistic regression
 	# NOTE: for logistic regression, we only want images with label 0 or 1.
@@ -446,14 +446,14 @@ if __name__ == '__main__':
 	# ========STEP 1a: Gradient descent=========
 	# NOTE: Fill in the code in grad_logreg, NLL and grad_descent for this step
 
-	print('==> Step 1a: Running gradient descent...')
+	print('\n==> Step 1a: Running gradient descent...')
 	W_gd, nll_list_gd = grad_descent(X_train_logreg, y_train_logreg, reg = 1e-6)
 
 
 	# ========STEP 1b: Newton's method==========
 	# NOTE: Fill in the code in newton_step and newton_method for this step
 
-	print('==> Step 1b: Running Newton\'s method...')
+	print('\n==> Step 1b: Running Newton\'s method...')
 	W_newton, nll_list_newton = newton_method(X_train_logreg, y_train_logreg, \
 		reg = 1e-6)
 
@@ -463,7 +463,7 @@ if __name__ == '__main__':
 	# NOTE: You DO NOT need to fill in any additional helper function for this
 	# 		step to run. This step uses what you implemented for the previous
 	#		two steps to plot.
-
+	print('\n==> Step 2: Generate Convergence Plot...')
 	print('==> Plotting convergence plot...')
 
 	# set up the style for the plot
@@ -492,10 +492,10 @@ if __name__ == '__main__':
 	# =============STEP 3: Generate accuracy/precision plot=================
 	# NOTE: Fill in the code in get_description and plot_description for this Step
 
-	print('Step 3: ==> Generating plots for accuracy, precision, recall, and F-1 score...')
+	print('\nStep 3: ==> Generating plots for accuracy, precision, recall, and F-1 score...')
 
 	# Plot the graph and obtain the optimal regularization parameter
 	reg_opt = plot_description(X_train_logreg, y_train_logreg, \
 		X_test_logreg, y_test_logreg)
 
-	print('==> Optimal regularization parameter is {:4.4f}'.format(reg_opt))
+	print('\n==> Optimal regularization parameter is {:4.4f}'.format(reg_opt))
