@@ -65,14 +65,10 @@ def get_knn(x, X_train, y_train, k=10):
 		NOTE: Use l2-norm as the distance metric.
 	"""
 	"*** YOUR CODE HERE ***"
-	m_train = X_train.shape[0]
-	dist_list = []
-	for index in range(m_train):
-		dist_vec = x - X_train[index, :]
-		dist = np.linalg.norm(dist_vec)
-		dist_list.append((index, dist))
-	dist_list = sorted(dist_list, key=lambda x: x[1])[:k] # sort by distance
-	return np.array([entry[0] for entry in dist_list]) # returns only the index
+	diff = x - X_train
+	diff_norm = np.linalg.norm(diff, axis=1)
+	ind = np.argsort(diff_norm)
+	return ind[:k]
 	"*** END YOUR CODE HERE ***"
 	
 
@@ -98,12 +94,15 @@ def predict_knn(X_test, X_train, y_train, k=10, print_freq=100):
 	m_test = X_test.shape[0]
 	m_train = X_train.shape[0]
 	y_pred = np.zeros(m_test)
+
 	for index in range(m_test):
+		"*** YOUR CODE HERE ***"
 		if (index + 1) % print_freq == 0:
 			print('Calculating the {}-th data point'.format(index + 1))
 		curr = X_test[index, :]
 		curr_knn = get_knn(curr, X_train, y_train, k=k)
 		y_pred[index] = np.argmax(np.bincount(y_train[curr_knn].flatten()))
+		"*** END YOUR CODE HERE ***"
 	return y_pred.astype(int).reshape(-1, 1)
 		
 
@@ -125,8 +124,8 @@ if __name__ == '__main__':
 	X_test = data.X_test[:500, :]
 	y_test = data.y_test[:500]
 	# stacking an array of ones
-	X_train = np.hstack((np.ones_like(y_train), X_train))
-	X_test = np.hstack((np.ones_like(y_test), X_test))
+	# X_train = np.hstack((np.ones_like(y_train), X_train))
+	# X_test = np.hstack((np.ones_like(y_test), X_test))
 	# =============STEP 1: KNN=================
 	# NOTE: Fill in the code in get_knn() and predict_knn() for this step
 
