@@ -1,5 +1,5 @@
 """
-Start file for hw1pr2 part(a) of Big Data Summer 2017
+Start file for knn of Big Data Summer 2017
 
 The file is seperated into two parts:
 	1) the helper functions
@@ -42,11 +42,12 @@ def get_accuracy(y_pred, y):
 		HINT:
 			1) You may use .astype(int) to cast an array into integer type.
 	"""
+	# TODO: Find the accuracy of a prediction
 	"*** YOUR CODE HERE ***"
-	diff = (y_pred == y).astype(int)
-	accu = 1. * diff.sum() / len(y)
-	return accu
+
+
 	"*** END YOUR CODE HERE ***"
+	return accu
 	
 
 def get_knn(x, X_train, y_train, k=10):
@@ -60,16 +61,16 @@ def get_knn(x, X_train, y_train, k=10):
 		for the given data vector.
 
 		HINT:
-			1) You may use sorted() to sort an array by a specified key.
+			1) Use np.argsort() to find the indices of a sorted array
 
 		NOTE: Use l2-norm as the distance metric.
 	"""
+	# TODO: Find the indicies of k nearest neighbors of a data point x
 	"*** YOUR CODE HERE ***"
-	diff = x - X_train
-	diff_norm = np.linalg.norm(diff, axis=1)
-	ind = np.argsort(diff_norm)
-	return ind[:k]
+
+
 	"*** END YOUR CODE HERE ***"
+	return ind[:k]
 	
 
 def predict_knn(X_test, X_train, y_train, k=10, print_freq=100):
@@ -83,26 +84,27 @@ def predict_knn(X_test, X_train, y_train, k=10, print_freq=100):
 		This function finds the label of k nearest neighbors for the test data.
 
 		HINT:
-			1) Use np.bincount() to count the number of appearance for each
+			1) Call get_knn() on each data point.
+			2) Use np.bincount() to count the number of appearance for each
 				element in the array.
-			2) Use .flatten() to flatten an array so that it could fit into np.bincount()
-			3) Use np.argmax() to find the index of the maximum element in the
+			3) Use .flatten() to flatten an array so that it could fit into np.bincount()
+			4) Use np.argmax() to find the index of the maximum element in the
 				array.
-
-		NOTE: 
 	"""
 	m_test = X_test.shape[0]
 	m_train = X_train.shape[0]
 	y_pred = np.zeros(m_test)
 
+	# TODO: Find the k nearest neighbors for each data point
 	for index in range(m_test):
-		"*** YOUR CODE HERE ***"
 		if (index + 1) % print_freq == 0:
 			print('Calculating the {}-th data point'.format(index + 1))
-		curr = X_test[index, :]
-		curr_knn = get_knn(curr, X_train, y_train, k=k)
-		y_pred[index] = np.argmax(np.bincount(y_train[curr_knn].flatten()))
+
+		"*** YOUR CODE HERE ***"
+		
+
 		"*** END YOUR CODE HERE ***"
+
 	return y_pred.astype(int).reshape(-1, 1)
 		
 
@@ -133,7 +135,7 @@ if __name__ == '__main__':
 	for k in k_list:
 		# TODO: Find the accuracy for given k values
 		"*** YOUR CODE HERE ***"
-		y_pred = predict_knn(X_test, X_train, y_train, k=k)
-		accu = get_accuracy(y_pred, y_test)
-		print('k = {}: accuracy is {: 4.4f}'.format(k, accu))
+
+
 		"*** END YOUR CODE HERE ***"
+		print('k = {}: accuracy is {: 4.4f}'.format(k, accu))

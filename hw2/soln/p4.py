@@ -1,5 +1,5 @@
 """
-Start file for hw1pr1 of Big Data Summer 2017
+Start file for lasso of Big Data Summer 2017
 
 The file is seperated into two parts:
 	1) the helper functions
@@ -51,9 +51,10 @@ def find_cost(X, y, W , reg):
 	"""
 	# TODO: Solve for l1-regularized mse
 	"*** YOUR CODE HERE ***"
+	m = len(y)
 	err = X @ W - y
 	err = float(err.T @ err)
-	return (err + reg * np.abs(W).sum())/len(y)
+	return (err + reg * np.abs(W).sum()) / m
 	"*** END YOUR CODE HERE ***"
 
 def find_grad(X, y, W, reg=0.0):
@@ -170,8 +171,8 @@ if __name__ == '__main__':
 	X = np.hstack((np.ones_like(y), X))
 
 	# =============STEP 1: LASSO GRADIENT DESCENT=================
-	# NOTE: Fill in code in find_MSE, find_grad, prox and 
-	# grad_lasso for this step
+	# NOTE: Fill in code in find_cost(), find_grad(), prox() and 
+	# grad_lasso() for this step
 	# We don't require any output for this step, but you may test your
 	# implementation by running grad_lasso(X, y)
 
