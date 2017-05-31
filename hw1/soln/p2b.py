@@ -17,7 +17,7 @@ def NLL(X, y, W, reg=0.0):
 	exp_mu = np.exp(mu)
 	prob = exp_mu / exp_mu.sum(axis=1).reshape(-1, 1)
 	groundTruth = y * np.log(prob)
-	return groundTruth.sum(axis=1).sum() - reg * np.diag(W.T @ W).sum()
+	return -groundTruth.sum(axis=1).sum() + reg * np.diag(W.T @ W).sum()
 
 def grad_softmax(X, y, W, reg=0.0):
 	'''
@@ -59,7 +59,7 @@ def grad_descent(X, y, reg=0.0, lr=1e-5, eps=1e-6, \
 		max_iter is the maximum number of iterations.
 		print_freq is the frequency of printing the report.
 
-		Return the optimal weight by gradient descent and 
+		Return the optimal weight by gradient descent and
 		the corresponding learning objectives.
 	'''
 	m, n = X.shape

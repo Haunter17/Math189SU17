@@ -17,7 +17,7 @@ def grad_logreg(X, y, W, reg = 0.0):
 		Return the gradient of W for logistic regression.
 	'''
 	# YOUR CODE BELOW
-	return X.T @ (sigmoid(X @ W) - y) - reg * W
+	return X.T @ (sigmoid(X @ W) - y) + reg * W
 
 def newton_step(X, y, W, reg = 0.0):
 	'''
@@ -38,7 +38,7 @@ def NLL(X, y, W, reg = 0.0):
 	# YOUR CODE GOES BELOW
 	mu = sigmoid(X @ W)
 	temp = np.multiply(y, np.log(mu)) + np.multiply((1. - y), np.log(1. - mu))
-	nll = -(sum(temp) + reg / 2 * np.linalg.norm(W) ** 2)
+	nll = -sum(temp) + reg / 2 * np.linalg.norm(W) ** 2
 	return nll.item(0)
 
 def grad_descent(X, y, reg = 0.0, lr = 1e-4, eps = 1e-6, \
