@@ -71,7 +71,7 @@ def nmf_cost(X, W, H):
 	"*** END YOUR CODE HERE ***"
 	return cost
 
-def nmf(X, k=20, max_iter=100, print_freq=5):
+def nmf(X, k=20, max_iter=100, print_freq=10):
 	"""	This function takes in three arguments:
 			1) X, the data matrix with dimension m x n
 			2) k, the number of latent factors
@@ -152,5 +152,6 @@ if __name__ == '__main__':
 	ind = np.flip(np.argsort(H, axis=1), 1)
 	"*** END YOUR CODE HERE ***"
 	top_words = np.array(tfidf.get_feature_names())[ind]
+	np.set_printoptions(threshold=np.nan)
 	for topic_ind in range(H.shape[0]):
-		print('-- topic {}: {}'.format(topic_ind + 1, top_words[topic_ind]))
+		print('-- topic {}: {}'.format(topic_ind + 1, top_words[topic_ind, :num_top_words]))
