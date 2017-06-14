@@ -150,5 +150,6 @@ if __name__ == '__main__':
 	
 	"*** END YOUR CODE HERE ***"
 	top_words = np.array(tfidf.get_feature_names())[ind]
+	np.set_printoptions(threshold=np.nan)
 	for topic_ind in range(H.shape[0]):
-		print('-- topic {}: {}'.format(topic_ind + 1, top_words[topic_ind]))
+		print('-- topic {}: {}'.format(topic_ind + 1, top_words[topic_ind, :num_top_words]))
